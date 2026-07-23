@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://equipmentProcedureFileDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="equipmentProcedureFileDc"
+                  class="com.company.whiteglovefitness.entity.EquipmentProcedureFile">
+            <fetchPlan extends="_base"/>
+            <loader id="equipmentProcedureFileDl"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="equipmentProcedureFileDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <select id="fileTypeField" property="fileType"/>
+            <fileStorageUploadField id="fileRefField" clearButtonVisible="true" fileNameVisible="true"
+                                    property="fileRef"/>
+            <vbox id="previewBox" padding="false" spacing="false" colspan="2">
+                <image id="image"
+                       dataContainer="equipmentProcedureFileDc"
+                       property="fileRef"
+                       maxHeight="40em"
+                       maxWidth="100%"
+                       classNames="procedure-photo" visible="false"/>
+                <component id="videoPlayer"
+                           class="com.company.whiteglovefitness.component.VideoPlayer"
+                           visible="false"/>
+            </vbox>
+            <textField id="titleField" property="title"/>
+            <textArea id="descriptionField" height="9.5em" property="description"/>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

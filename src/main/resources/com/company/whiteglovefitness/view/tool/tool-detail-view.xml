@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://toolDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="toolDc"
+                  class="com.company.whiteglovefitness.entity.Tool">
+            <fetchPlan extends="_base">
+                <property name="equipmentProcedures" fetch="BATCH" fetchPlan="_base">
+                </property>
+            </fetchPlan>
+            <loader id="toolDl"/>
+            <collection id="equipmentProceduresDc" property="equipmentProcedures"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="toolDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="nameField" property="name"/>
+            <textArea id="descriptionField" height="9.5em" property="description"/>
+            <fileStorageUploadField id="photoField" clearButtonVisible="true" fileNameVisible="true" property="photo"/>
+        </formLayout>
+        <h4 text="msg://com.company.whiteglovefitness.entity/Tool.equipmentProcedures"/>
+        <hbox id="equipmentProceduresButtonsPanel" wrap="true" width="100%">
+            <button action="equipmentProceduresDataGrid.addAction"/>
+            <button action="equipmentProceduresDataGrid.excludeAction"/>
+        </hbox>
+        <dataGrid id="equipmentProceduresDataGrid" dataContainer="equipmentProceduresDc" width="100%" minHeight="20em">
+            <actions>
+                <action id="addAction" type="list_add"/>
+                <action id="excludeAction" type="list_exclude"/>
+            </actions>
+            <columns>
+                <column property="equipmentProcedureType"/>
+                <column property="accessCondition"/>
+                <column property="title"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

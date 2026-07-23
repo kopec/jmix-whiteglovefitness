@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://jmix.io/schema/flowui/menu">
+    <menu id="equipment" description="msg://com.company.whiteglovefitness/menu_config.equipment.description"
+          title="msg://com.company.whiteglovefitness/menu_config.equipment.title" icon="CUBES" opened="true">
+        <item view="EquipmentBrand.list"
+              description="msg://com.company.whiteglovefitness/menu_config.EquipmentBrand.list.description"
+              title="msg://com.company.whiteglovefitness/menu_config.EquipmentBrand.list.title"/>
+        <item view="EquipmentCategory.list"
+              description="msg://com.company.whiteglovefitness/menu_config.EquipmentCategory.list.description"
+              title="msg://com.company.whiteglovefitness/menu_config.EquipmentCategory.list.title"/>
+        <item view="EquipmentModel.list"
+              description="msg://com.company.whiteglovefitness/menu_config.EquipmentModel.list.description"
+              title="msg://com.company.whiteglovefitness/menu_config.EquipmentModel.list.title"/>
+    </menu>
+    <menu id="application" title="msg://com.company.whiteglovefitness/menu.application.title" opened="true">
+        <item view="User.list" title="msg://com.company.whiteglovefitness.view.user/UserListView.title"/>
+        <item view="Tool.list" title="msg://com.company.whiteglovefitness.view.tool/toolListView.title"/>
+    </menu>
+</menu-config>

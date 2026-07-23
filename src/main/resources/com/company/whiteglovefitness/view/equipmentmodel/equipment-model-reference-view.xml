@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://equipmentModelReferenceView.title"
+      messagesGroup="com.company.whiteglovefitness.view.equipmentmodel"
+      focusComponent="form">
+    <data>
+        <instance id="equipmentModelDc"
+                  class="com.company.whiteglovefitness.entity.EquipmentModel">
+            <fetchPlan extends="_base">
+                <property name="equipmentCategory" fetch="JOIN" fetchPlan="_instance_name"/>
+                <property name="equipmentBrand" fetch="JOIN" fetchPlan="_instance_name"/>
+                <property name="equipmentMeasurements" fetch="BATCH" fetchPlan="_base"/>
+                <property name="equipmentProcedures" fetch="BATCH" fetchPlan="_base">
+                    <property name="equipmentProcedureFiles" fetch="BATCH" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
+            <loader id="equipmentModelDl"/>
+            <collection id="equipmentMeasurementsDc" property="equipmentMeasurements"/>
+            <collection id="equipmentProceduresDc" property="equipmentProcedures"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <vbox id="referenceContent" width="100%" padding="false" spacing="true" classNames="reference-view">
+            <h4 text="msg://modelInformationSection.text"/>
+            <formLayout id="form" dataContainer="equipmentModelDc">
+                <responsiveSteps>
+                    <responsiveStep minWidth="0" columns="1"/>
+                    <responsiveStep minWidth="40em" columns="2"/>
+                </responsiveSteps>
+                <textField id="nameField" property="name" readOnly="true"/>
+                <textField id="modelNumberField" property="modelNumber" readOnly="true"/>
+                <entityPicker id="equipmentBrandField" property="equipmentBrand" readOnly="true"/>
+                <entityPicker id="equipmentCategoryField" property="equipmentCategory" readOnly="true"/>
+                <checkbox id="requiresCalibrationField" property="requiresCalibration" readOnly="true"/>
+                <textArea id="descriptionField" property="description" colspan="2" height="8em" readOnly="true"/>
+            </formLayout>
+
+            <h4 text="msg://measurementsSection.text"/>
+            <dataGrid id="equipmentMeasurementsDataGrid"
+                      dataContainer="equipmentMeasurementsDc"
+                      width="100%"
+                      height="20em"
+                      columnReorderingAllowed="true">
+                <columns resizable="true">
+                    <column property="measurementType"/>
+                    <column property="label"/>
+                    <column key="valueAndUnit" header="msg://measurementValueColumn.header"/>
+                </columns>
+            </dataGrid>
+
+            <h4 text="msg://proceduresSection.text"/>
+            <hbox id="equipmentProceduresButtonsPanel" wrap="true" width="100%">
+                <button id="openProcedureButton" text="msg://openProcedureButton.text"/>
+            </hbox>
+            <dataGrid id="equipmentProceduresDataGrid"
+                      dataContainer="equipmentProceduresDc"
+                      width="100%"
+                      height="20em"
+                      columnReorderingAllowed="true">
+                <columns resizable="true">
+                    <column property="equipmentProcedureType"/>
+                    <column property="accessCondition"/>
+                    <column property="title"/>
+                    <column property="estimatedMinutes" header="msg://estimatedTimeColumn.header"/>
+                    <column key="fileCounts" header="msg://procedureFilesColumn.header"/>
+                </columns>
+            </dataGrid>
+
+            <hbox id="detailActions">
+                <button id="closeButton" action="closeAction"/>
+            </hbox>
+        </vbox>
+    </layout>
+</view>

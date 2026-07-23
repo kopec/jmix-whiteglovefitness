@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://equipmentProcedureDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="equipmentProcedureDc"
+                  class="com.company.whiteglovefitness.entity.EquipmentProcedure">
+            <fetchPlan extends="_base">
+                <property name="equipmentProcedureChecks" fetch="BATCH" fetchPlan="_base"/>
+                <property name="equipmentProcedureFiles" fetch="BATCH" fetchPlan="_base"/>
+                <property name="tools" fetch="BATCH" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="equipmentProcedureDl"/>
+            <collection id="equipmentProcedureChecksDc" property="equipmentProcedureChecks"/>
+            <collection id="equipmentProcedureFilesDc" property="equipmentProcedureFiles"/>
+            <collection id="toolsDc" property="tools"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="equipmentProcedureDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <select id="equipmentProcedureTypeField" property="equipmentProcedureType"/>
+            <select id="accessConditionField" property="accessCondition"/>
+            <textField id="titleField" property="title"/>
+            <textField id="estimatedMinutesField" property="estimatedMinutes"/>
+            <markdownEditor id="instructionsField" colspan="2" property="instructions" height="40em"/>
+        </formLayout>
+        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.equipmentProcedureChecks"/>
+        <hbox id="equipmentProcedureChecksButtonsPanel" wrap="true" width="100%">
+            <button action="equipmentProcedureChecksDataGrid.createAction"/>
+            <button action="equipmentProcedureChecksDataGrid.editAction"/>
+            <button action="equipmentProcedureChecksDataGrid.removeAction"/>
+        </hbox>
+        <dataGrid id="equipmentProcedureChecksDataGrid" dataContainer="equipmentProcedureChecksDc" width="100%"
+                  minHeight="20em">
+            <actions>
+                <action id="createAction" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="editAction" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="statement"/>
+            </columns>
+        </dataGrid>
+        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.equipmentProcedureFiles"/>
+        <hbox id="equipmentProcedureFilesButtonsPanel" wrap="true" width="100%">
+            <button action="equipmentProcedureFilesDataGrid.createAction"/>
+            <button action="equipmentProcedureFilesDataGrid.editAction"/>
+            <button action="equipmentProcedureFilesDataGrid.removeAction"/>
+        </hbox>
+        <dataGrid id="equipmentProcedureFilesDataGrid" dataContainer="equipmentProcedureFilesDc" width="100%"
+                  minHeight="20em">
+            <actions>
+                <action id="createAction" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="editAction" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="fileType"/>
+                <column property="fileRef"/>
+                <column property="title"/>
+            </columns>
+        </dataGrid>
+        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.tools"/>
+        <hbox id="toolsButtonsPanel" wrap="true" width="100%">
+            <button action="toolsDataGrid.addAction"/>
+            <button action="toolsDataGrid.excludeAction"/>
+        </hbox>
+        <dataGrid id="toolsDataGrid" dataContainer="toolsDc" width="100%" minHeight="20em">
+            <actions>
+                <action id="addAction" type="list_add"/>
+                <action id="excludeAction" type="list_exclude"/>
+            </actions>
+            <columns>
+                <column property="name"/>
+                <column property="photo"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

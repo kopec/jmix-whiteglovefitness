@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS"
+        logicalFilePath="com/company/whiteglovefitness/liquibase/changelog/2026/07/07-194645-b3b9e7a1.xml">
+    <changeSet id="1" author="WhiteGloveFitness">
+        <createTable tableName="EQUIPMENT_PROCEDURE">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EQUIPMENT_PROCEDURE"/>
+            </column>
+            <column name="EQUIPMENT_MODEL_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="WhiteGloveFitness">
+        <createTable tableName="EQUIPMENT_PROCEDURE_FILE">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EQUIPMENT_PROCEDURE_FILE"/>
+            </column>
+            <column name="FILE_REF" type="VARCHAR(1024)"/>
+            <column name="FILE_TYPE" type="VARCHAR(255)"/>
+            <column name="CAPTION" type="VARCHAR(255)"/>
+            <column name="SORT_ORDER" type="INT"/>
+            <column name="EQUIPMENT_PROCEDURE_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="WhiteGloveFitness">
+        <createIndex indexName="IDX_EQUIPMENT_PROCEDURE_EQUIPMENT_MODEL" tableName="EQUIPMENT_PROCEDURE">
+            <column name="EQUIPMENT_MODEL_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="EQUIPMENT_MODEL_ID" baseTableName="EQUIPMENT_PROCEDURE"
+                                 constraintName="FK_EQUIPMENT_PROCEDURE_ON_EQUIPMENT_MODEL" onDelete="CASCADE"
+                                 referencedColumnNames="ID" referencedTableName="EQUIPMENT_MODEL"/>
+    </changeSet>
+    <changeSet id="4" author="WhiteGloveFitness">
+        <createIndex indexName="IDX_EQUIPMENT_PROCEDURE_FILE_EQUIPMENT_PROCEDURE" tableName="EQUIPMENT_PROCEDURE_FILE">
+            <column name="EQUIPMENT_PROCEDURE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="EQUIPMENT_PROCEDURE_ID" baseTableName="EQUIPMENT_PROCEDURE_FILE"
+                                 constraintName="FK_EQUIPMENT_PROCEDURE_FILE_ON_EQUIPMENT_PROCEDURE" onDelete="CASCADE"
+                                 referencedColumnNames="ID" referencedTableName="EQUIPMENT_PROCEDURE"/>
+    </changeSet>
+    <changeSet id="5" author="WhiteGloveFitness">
+        <dropTable cascadeConstraints="true" tableName="VEHICLE"/>
+    </changeSet>
+</databaseChangeLog>

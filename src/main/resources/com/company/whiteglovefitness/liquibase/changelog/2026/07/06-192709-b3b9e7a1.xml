@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS"
+        logicalFilePath="com/company/whiteglovefitness/liquibase/changelog/2026/07/06-192709-b3b9e7a1.xml">
+    <changeSet id="1" author="WhiteGloveFitness">
+        <createTable tableName="CREW">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CREW"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="WhiteGloveFitness">
+        <createTable tableName="EQUIPMENT_BRAND">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EQUIPMENT_BRAND"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="WEBSITE" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="WhiteGloveFitness">
+        <createTable tableName="EQUIPMENT_CATEGORY">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EQUIPMENT_CATEGORY"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="WhiteGloveFitness">
+        <createTable tableName="EQUIPMENT_MODEL">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_EQUIPMENT_MODEL"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="CLOB"/>
+            <column name="REQUIRES_CALIBRATION" type="BOOLEAN"/>
+            <column name="EQUIPMENT_BRAND_ID" type="UUID"/>
+            <column name="EQUIPMENT_CATEGORY_ID" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="5" author="WhiteGloveFitness">
+        <createTable tableName="JOB">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_JOB"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="6" author="WhiteGloveFitness">
+        <createTable tableName="VEHICLE">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_VEHICLE"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="7" author="WhiteGloveFitness">
+        <addColumn tableName="JOB_CARD">
+            <column name="JOB_ID" type="UUID"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="8" author="WhiteGloveFitness">
+        <addColumn tableName="TOOL">
+            <column name="NAME" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="9" author="WhiteGloveFitness">
+        <createIndex indexName="IDX_EQUIPMENT_MODEL_EQUIPMENT_BRAND" tableName="EQUIPMENT_MODEL">
+            <column name="EQUIPMENT_BRAND_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="EQUIPMENT_BRAND_ID" baseTableName="EQUIPMENT_MODEL"
+                                 constraintName="FK_EQUIPMENT_MODEL_ON_EQUIPMENT_BRAND" onDelete="SET NULL"
+                                 referencedColumnNames="ID" referencedTableName="EQUIPMENT_BRAND"/>
+    </changeSet>
+    <changeSet id="10" author="WhiteGloveFitness">
+        <createIndex indexName="IDX_EQUIPMENT_MODEL_EQUIPMENT_CATEGORY" tableName="EQUIPMENT_MODEL">
+            <column name="EQUIPMENT_CATEGORY_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="EQUIPMENT_CATEGORY_ID" baseTableName="EQUIPMENT_MODEL"
+                                 constraintName="FK_EQUIPMENT_MODEL_ON_EQUIPMENT_CATEGORY" onDelete="SET NULL"
+                                 referencedColumnNames="ID" referencedTableName="EQUIPMENT_CATEGORY"/>
+    </changeSet>
+    <changeSet id="11" author="WhiteGloveFitness">
+        <createIndex indexName="IDX_JOB_CARD_JOB" tableName="JOB_CARD">
+            <column name="JOB_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="JOB_ID" baseTableName="JOB_CARD" constraintName="FK_JOB_CARD_ON_JOB"
+                                 onDelete="CASCADE" referencedColumnNames="ID" referencedTableName="JOB"/>
+    </changeSet>
+    <changeSet id="12" author="WhiteGloveFitness">
+        <dropTable cascadeConstraints="true" tableName="BRAND"/>
+    </changeSet>
+    <changeSet id="13" author="WhiteGloveFitness">
+        <dropTable cascadeConstraints="true" tableName="EQUIPMENT_PROFILE"/>
+    </changeSet>
+</databaseChangeLog>

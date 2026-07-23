@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://equipmentProcedureReferenceView.title"
+      messagesGroup="com.company.whiteglovefitness.view.equipmentprocedure"
+      focusComponent="form">
+    <data>
+        <instance id="equipmentProcedureDc"
+                  class="com.company.whiteglovefitness.entity.EquipmentProcedure">
+            <fetchPlan extends="_base">
+                <property name="equipmentModel" fetch="JOIN" fetchPlan="_instance_name"/>
+                <property name="equipmentProcedureChecks" fetch="BATCH" fetchPlan="_base"/>
+                <property name="equipmentProcedureFiles" fetch="BATCH" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="equipmentProcedureDl"/>
+            <collection id="equipmentProcedureChecksDc" property="equipmentProcedureChecks"/>
+            <collection id="equipmentProcedureFilesDc" property="equipmentProcedureFiles"/>
+        </instance>
+        <collection id="documentFilesDc"
+                    class="com.company.whiteglovefitness.entity.EquipmentProcedureFile">
+            <fetchPlan extends="_base"/>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <vbox id="referenceContent" width="100%" padding="false" spacing="true" classNames="reference-view">
+            <h4 id="equipmentModelNameHeading" text="msg://procedureInformationSection.text"/>
+            <formLayout id="form" dataContainer="equipmentProcedureDc">
+                <responsiveSteps>
+                    <responsiveStep minWidth="0" columns="1"/>
+                    <responsiveStep minWidth="40em" columns="2"/>
+                </responsiveSteps>
+                <select id="equipmentProcedureTypeField" property="equipmentProcedureType" readOnly="true"/>
+                <select id="accessConditionField" property="accessCondition" readOnly="true"/>
+                <textField id="titleField" property="title" readOnly="true"/>
+                <textField id="estimatedTimeField" label="msg://estimatedTimeField.label" readOnly="true"/>
+                <formItem id="instructionsItem"
+                          label="msg://instructionsField.label"
+                          classNames="markdown-form-item"
+                          colspan="2">
+                    <markdown id="instructionsField"
+                              width="100%"
+                              content=" "/>
+                </formItem>
+            </formLayout>
+
+            <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.equipmentProcedureChecks"/>
+            <checkboxGroup id="equipmentProcedureChecksCheckboxGroup"
+                           itemsContainer="equipmentProcedureChecksDc"
+                           width="100%"
+                           themeNames="vertical"/>
+
+            <h4 text="msg://photosSection.text"/>
+            <div id="photoCards" classNames="reference-file-card-grid"/>
+
+            <h4 text="msg://videosSection.text"/>
+            <div id="videoCards" classNames="reference-file-card-grid"/>
+
+            <h4 text="msg://documentsSection.text"/>
+            <hbox id="documentFilesButtonsPanel" wrap="true" width="100%"/>
+            <dataGrid id="documentFilesDataGrid"
+                      dataContainer="documentFilesDc"
+                      width="100%"
+                      height="20em"
+                      columnReorderingAllowed="true">
+                <columns resizable="true">
+                    <column property="title"/>
+                    <column property="description"/>
+                    <column property="fileRef"/>
+                </columns>
+            </dataGrid>
+
+            <hbox id="detailActions">
+                <button id="closeButton" action="closeAction"/>
+            </hbox>
+        </vbox>
+    </layout>
+</view>

@@ -1,0 +1,150 @@
+/* Define your styles here, possibly use preview for photo and video */
+.procedure-photo {
+    object-fit: contain;      /* Keeps the original aspect ratio */
+    object-position: center;   /* Centers the image inside the 2-column box */
+    width: 100%;               /* Lets it expand up to the max width allowed */
+}
+
+.reference-view vaadin-markdown {
+    box-sizing: border-box;
+    padding: var(--vaadin-input-field-padding, 0.5em 0.75em);
+    background: var(--aura-surface-color);
+    border: 1px solid var(--vaadin-border-color-secondary);
+    border-radius: var(--vaadin-radius-m);
+    color: var(--vaadin-text-color);
+}
+
+.reference-view vaadin-form-item.markdown-form-item::part(label) {
+    padding-bottom: var(--vaadin-gap-xs);
+}
+
+.reference-view vaadin-text-field,
+.reference-view vaadin-text-area,
+.reference-view vaadin-select,
+.reference-view jmix-value-picker {
+    --vaadin-input-field-background: #fff;
+}
+
+.reference-view vaadin-checkbox[readonly]::part(checkbox) {
+    background: #fff;
+}
+
+.reference-view > h4 {
+    margin: var(--vaadin-padding-l) 0 0;
+}
+
+.reference-view > h4:first-child {
+    margin-top: 0;
+}
+
+.reference-file-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--vaadin-gap-m);
+    width: 100%;
+}
+
+.reference-file-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 10rem;
+    overflow: hidden;
+    border: 1px solid var(--vaadin-border-color-secondary);
+    border-radius: var(--vaadin-radius-m);
+    background: var(--aura-surface-color);
+    cursor: pointer;
+    padding-bottom: var(--vaadin-padding-s);
+}
+
+.reference-file-card:focus-visible {
+    outline: 2px solid var(--aura-accent-color);
+    outline-offset: 2px;
+}
+
+.reference-file-card-media {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--vaadin-background-container);
+}
+
+.reference-file-card-icon {
+    box-sizing: border-box;
+    width: 100%;
+    height: 8rem;
+    padding: 2.5rem;
+    color: var(--aura-accent-color);
+    background: var(--vaadin-background-container);
+}
+
+.reference-file-card-title {
+    margin: var(--vaadin-padding-s) var(--vaadin-padding-s) 0;
+    font-size: var(--aura-font-size-m);
+    line-height: var(--aura-line-height-s);
+}
+
+.reference-file-card-description {
+    display: -webkit-box;
+    margin: var(--vaadin-padding-s) var(--vaadin-padding-s) 0;
+    overflow: hidden;
+    color: var(--vaadin-text-color-secondary);
+    font-size: var(--aura-font-size-s);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.reference-file-empty {
+    color: var(--vaadin-text-color-secondary);
+}
+
+.reference-preview-view {
+    box-sizing: border-box;
+    background: var(--aura-background-color);
+}
+
+.reference-preview-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--vaadin-gap-xs);
+    box-sizing: border-box;
+    width: 100%;
+    padding: var(--vaadin-padding-s);
+    border-bottom: 1px solid var(--vaadin-border-color-secondary);
+    background: var(--aura-surface-color);
+}
+
+.reference-preview-toolbar:empty {
+    display: none;
+}
+
+.reference-preview-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.reference-preview-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.reference-preview-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+}
+
+.reference-preview-video,
+.reference-preview-document {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}

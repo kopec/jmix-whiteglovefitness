@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://equipmentModelDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="equipmentModelDc"
+                  class="com.company.whiteglovefitness.entity.EquipmentModel">
+            <fetchPlan extends="_base">
+                <property name="equipmentCategory" fetch="JOIN" fetchPlan="_base"/>
+                <property name="equipmentMeasurements" fetch="BATCH" fetchPlan="_base"/>
+                <property name="equipmentProcedures" fetch="BATCH" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="equipmentModelDl"/>
+            <collection id="equipmentMeasurementsDc" property="equipmentMeasurements"/>
+            <collection id="equipmentProceduresDc" property="equipmentProcedures"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveCloseAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="equipmentModelDc">
+            <responsiveSteps>
+                <responsiveStep minWidth="0" columns="1"/>
+                <responsiveStep minWidth="40em" columns="2"/>
+            </responsiveSteps>
+            <textField id="nameField" property="name"/>
+            <textField id="modelNumberField" property="modelNumber"/>
+            <entityPicker id="equipmentBrandField" property="equipmentBrand">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="equipmentCategoryField" property="equipmentCategory">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <checkbox id="requiresCalibrationField" property="requiresCalibration"/>
+            <textArea id="descriptionField" colspan="2" height="8em" property="description"/>
+        </formLayout>
+        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentModel.equipmentMeasurements"/>
+        <hbox id="equipmentMeasurementsButtonsPanel" wrap="true" width="100%">
+            <button action="equipmentMeasurementsDataGrid.createAction"/>
+            <button action="equipmentMeasurementsDataGrid.editAction"/>
+            <button action="equipmentMeasurementsDataGrid.removeAction"/>
+        </hbox>
+        <dataGrid id="equipmentMeasurementsDataGrid" dataContainer="equipmentMeasurementsDc" width="100%"
+                  height="20em">
+            <actions>
+                <action id="createAction" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="editAction" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="measurementType"/>
+                <column property="label"/>
+                <column property="value"/>
+                <column property="measurementUnit"/>
+            </columns>
+        </dataGrid>
+        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentModel.equipmentProcedures"/>
+        <hbox id="equipmentProceduresButtonsPanel" wrap="true" width="100%">
+            <button action="equipmentProceduresDataGrid.createAction"/>
+            <button action="equipmentProceduresDataGrid.editAction"/>
+            <button action="equipmentProceduresDataGrid.removeAction"/>
+        </hbox>
+        <dataGrid id="equipmentProceduresDataGrid" dataContainer="equipmentProceduresDc" width="100%" height="20em">
+            <actions>
+                <action id="createAction" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="editAction" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="equipmentProcedureType"/>
+                <column property="accessCondition"/>
+                <column property="title"/>
+                <column property="estimatedMinutes"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="saveAndCloseButton" action="saveCloseAction"/>
+            <button id="closeButton" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

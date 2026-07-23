@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://filePreviewView.title"
+      messagesGroup="com.company.whiteglovefitness.view.equipmentprocedure">
+    <layout width="100%" height="100%" padding="false" spacing="false" classNames="reference-preview-view">
+        <div id="previewToolbar" classNames="reference-preview-toolbar"/>
+        <div id="previewContent" classNames="reference-preview-content"/>
+    </layout>
+</view>
