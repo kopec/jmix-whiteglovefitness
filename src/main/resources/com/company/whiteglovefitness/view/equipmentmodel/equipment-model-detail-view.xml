@@ -52,7 +52,7 @@
             <button action="equipmentMeasurementsDataGrid.removeAction"/>
         </hbox>
         <dataGrid id="equipmentMeasurementsDataGrid" dataContainer="equipmentMeasurementsDc" width="100%"
-                  height="20em">
+                  minHeight="20em">
             <actions>
                 <action id="createAction" type="list_create">
                     <properties>
@@ -79,7 +79,7 @@
             <button action="equipmentProceduresDataGrid.editAction"/>
             <button action="equipmentProceduresDataGrid.removeAction"/>
         </hbox>
-        <dataGrid id="equipmentProceduresDataGrid" dataContainer="equipmentProceduresDc" width="100%" height="20em">
+        <dataGrid id="equipmentProceduresDataGrid" dataContainer="equipmentProceduresDc" width="100%" minHeight="20em">
             <actions>
                 <action id="createAction" type="list_create">
                     <properties>

@@ -65,7 +65,7 @@
             <dataGrid id="documentFilesDataGrid"
                       dataContainer="documentFilesDc"
                       width="100%"
-                      height="20em"
+                      minHeight="20em"
                       columnReorderingAllowed="true">
                 <columns resizable="true">
                     <column property="title"/>

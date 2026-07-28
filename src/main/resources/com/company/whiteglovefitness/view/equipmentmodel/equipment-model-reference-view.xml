@@ -45,7 +45,7 @@
             <dataGrid id="equipmentMeasurementsDataGrid"
                       dataContainer="equipmentMeasurementsDc"
                       width="100%"
-                      height="20em"
+                      minHeight="20em"
                       columnReorderingAllowed="true">
                 <columns resizable="true">
                     <column property="measurementType"/>
@@ -61,7 +61,7 @@
             <dataGrid id="equipmentProceduresDataGrid"
                       dataContainer="equipmentProceduresDc"
                       width="100%"
-                      height="20em"
+                      minHeight="20em"
                       columnReorderingAllowed="true">
                 <columns resizable="true">
                     <column property="equipmentProcedureType"/>
