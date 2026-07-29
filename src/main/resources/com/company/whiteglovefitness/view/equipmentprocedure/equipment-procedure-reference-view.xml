@@ -68,9 +68,9 @@
                       minHeight="20em"
                       columnReorderingAllowed="true">
                 <columns resizable="true">
-                    <column property="title"/>
-                    <column property="description"/>
-                    <column property="fileRef"/>
+                    <column property="title" autoWidth="true"/>
+                    <column property="description" autoWidth="true"/>
+                    <column property="fileRef" autoWidth="true"/>
                 </columns>
             </dataGrid>
 

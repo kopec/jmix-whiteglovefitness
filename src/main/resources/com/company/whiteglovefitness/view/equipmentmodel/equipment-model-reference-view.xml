@@ -48,9 +48,9 @@
                       minHeight="20em"
                       columnReorderingAllowed="true">
                 <columns resizable="true">
-                    <column property="measurementType"/>
-                    <column property="label"/>
-                    <column key="valueAndUnit" header="msg://measurementValueColumn.header"/>
+                    <column property="measurementType" autoWidth="true"/>
+                    <column property="label" autoWidth="true"/>
+                    <column key="valueAndUnit" header="msg://measurementValueColumn.header" autoWidth="true"/>
                 </columns>
             </dataGrid>
 
@@ -64,11 +64,11 @@
                       minHeight="20em"
                       columnReorderingAllowed="true">
                 <columns resizable="true">
-                    <column property="equipmentProcedureType"/>
-                    <column property="accessCondition"/>
-                    <column property="title"/>
-                    <column property="estimatedMinutes" header="msg://estimatedTimeColumn.header"/>
-                    <column key="fileCounts" header="msg://procedureFilesColumn.header"/>
+                    <column property="equipmentProcedureType" autoWidth="true"/>
+                    <column property="accessCondition" autoWidth="true"/>
+                    <column property="title" autoWidth="true"/>
+                    <column property="estimatedMinutes" header="msg://estimatedTimeColumn.header" autoWidth="true"/>
+                    <column key="fileCounts" header="msg://procedureFilesColumn.header" autoWidth="true"/>
                 </columns>
             </dataGrid>
 

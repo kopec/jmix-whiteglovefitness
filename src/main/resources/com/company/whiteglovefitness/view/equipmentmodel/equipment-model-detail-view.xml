@@ -67,10 +67,10 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns>
-                <column property="measurementType"/>
-                <column property="label"/>
-                <column property="value"/>
-                <column property="measurementUnit"/>
+                <column property="measurementType" autoWidth="true"/>
+                <column property="label" autoWidth="true"/>
+                <column property="value" autoWidth="true"/>
+                <column property="measurementUnit" autoWidth="true"/>
             </columns>
         </dataGrid>
         <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentModel.equipmentProcedures"/>
@@ -94,10 +94,10 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns>
-                <column property="equipmentProcedureType"/>
-                <column property="accessCondition"/>
-                <column property="title"/>
-                <column property="estimatedMinutes"/>
+                <column property="equipmentProcedureType" autoWidth="true"/>
+                <column property="accessCondition" autoWidth="true"/>
+                <column property="title" autoWidth="true"/>
+                <column property="estimatedMinutes" autoWidth="true"/>
             </columns>
         </dataGrid>
         <hbox id="detailActions">

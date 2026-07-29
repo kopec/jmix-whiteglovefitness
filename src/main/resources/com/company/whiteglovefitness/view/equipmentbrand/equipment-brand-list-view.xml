@@ -51,8 +51,8 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="name"/>
-                <column property="website"/>
+                <column property="name" autoWidth="true"/>
+                <column property="website" autoWidth="true"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

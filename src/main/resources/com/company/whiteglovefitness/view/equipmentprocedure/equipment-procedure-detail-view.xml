@@ -57,7 +57,7 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns>
-                <column property="statement"/>
+                <column property="statement" autoWidth="true"/>
             </columns>
         </dataGrid>
         <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.equipmentProcedureFiles"/>
@@ -82,9 +82,9 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns>
-                <column property="fileType"/>
-                <column property="fileRef"/>
-                <column property="title"/>
+                <column property="fileType" autoWidth="true"/>
+                <column property="fileRef" autoWidth="true"/>
+                <column property="title" autoWidth="true"/>
             </columns>
         </dataGrid>
         <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.tools"/>
@@ -98,8 +98,8 @@
                 <action id="excludeAction" type="list_exclude"/>
             </actions>
             <columns>
-                <column property="name"/>
-                <column property="photo"/>
+                <column property="name" autoWidth="true"/>
+                <column property="photo" autoWidth="true"/>
             </columns>
         </dataGrid>
         <hbox id="detailActions">

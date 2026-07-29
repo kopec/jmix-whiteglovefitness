@@ -41,9 +41,9 @@
                 <action id="excludeAction" type="list_exclude"/>
             </actions>
             <columns>
-                <column property="equipmentProcedureType"/>
-                <column property="accessCondition"/>
-                <column property="title"/>
+                <column property="equipmentProcedureType" autoWidth="true"/>
+                <column property="accessCondition" autoWidth="true"/>
+                <column property="title" autoWidth="true"/>
             </columns>
         </dataGrid>
         <hbox id="detailActions">
