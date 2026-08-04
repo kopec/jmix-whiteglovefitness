@@ -9,15 +9,22 @@
             <fetchPlan extends="_base">
                 <property name="equipmentCategory" fetch="JOIN" fetchPlan="_instance_name"/>
                 <property name="equipmentBrand" fetch="JOIN" fetchPlan="_instance_name"/>
+                <property name="equipmentFiles" fetch="BATCH" fetchPlan="_base"/>
                 <property name="equipmentMeasurements" fetch="BATCH" fetchPlan="_base"/>
                 <property name="equipmentProcedures" fetch="BATCH" fetchPlan="_base">
-                    <property name="equipmentProcedureFiles" fetch="BATCH" fetchPlan="_base"/>
+                    <property name="equipmentProcedureVariant" fetch="JOIN" fetchPlan="_instance_name"/>
+                    <property name="equipmentFiles" fetch="BATCH" fetchPlan="_base"/>
                 </property>
             </fetchPlan>
             <loader id="equipmentModelDl"/>
+            <collection id="equipmentFilesDc" property="equipmentFiles"/>
             <collection id="equipmentMeasurementsDc" property="equipmentMeasurements"/>
             <collection id="equipmentProceduresDc" property="equipmentProcedures"/>
         </instance>
+        <collection id="documentFilesDc"
+                    class="com.company.whiteglovefitness.entity.EquipmentFile">
+            <fetchPlan extends="_base"/>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -40,6 +47,26 @@
                 <checkbox id="requiresCalibrationField" property="requiresCalibration" readOnly="true"/>
                 <textArea id="descriptionField" property="description" colspan="2" height="8em" readOnly="true"/>
             </formLayout>
+
+            <h4 text="msg://photosSection.text"/>
+            <div id="photoCards" classNames="reference-file-card-grid"/>
+
+            <h4 text="msg://videosSection.text"/>
+            <div id="videoCards" classNames="reference-file-card-grid"/>
+
+            <h4 text="msg://documentsSection.text"/>
+            <hbox id="documentFilesButtonsPanel" wrap="true" width="100%"/>
+            <dataGrid id="documentFilesDataGrid"
+                      dataContainer="documentFilesDc"
+                      width="100%"
+                      minHeight="20em"
+                      columnReorderingAllowed="true">
+                <columns resizable="true">
+                    <column property="title" autoWidth="true"/>
+                    <column property="description" autoWidth="true"/>
+                    <column property="fileRef" autoWidth="true"/>
+                </columns>
+            </dataGrid>
 
             <h4 text="msg://measurementsSection.text"/>
             <dataGrid id="equipmentMeasurementsDataGrid"
@@ -65,8 +92,8 @@
                       columnReorderingAllowed="true">
                 <columns resizable="true">
                     <column property="equipmentProcedureType" autoWidth="true"/>
-                    <column property="accessCondition" autoWidth="true"/>
-                    <column property="title" autoWidth="true"/>
+                    <column property="equipmentProcedureVariant" autoWidth="true"/>
+                    <column property="note" autoWidth="true"/>
                     <column property="estimatedMinutes" header="msg://estimatedTimeColumn.header" autoWidth="true"/>
                     <column key="fileCounts" header="msg://procedureFilesColumn.header" autoWidth="true"/>
                 </columns>

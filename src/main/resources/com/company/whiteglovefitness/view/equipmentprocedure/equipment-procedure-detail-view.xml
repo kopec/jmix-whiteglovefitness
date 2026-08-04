@@ -6,15 +6,23 @@
         <instance id="equipmentProcedureDc"
                   class="com.company.whiteglovefitness.entity.EquipmentProcedure">
             <fetchPlan extends="_base">
+                <property name="equipmentProcedureVariant" fetch="JOIN" fetchPlan="_instance_name"/>
                 <property name="equipmentProcedureChecks" fetch="BATCH" fetchPlan="_base"/>
-                <property name="equipmentProcedureFiles" fetch="BATCH" fetchPlan="_base"/>
-                <property name="tools" fetch="BATCH" fetchPlan="_base"/>
+                <property name="equipmentFiles" fetch="BATCH" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="equipmentProcedureDl"/>
             <collection id="equipmentProcedureChecksDc" property="equipmentProcedureChecks"/>
-            <collection id="equipmentProcedureFilesDc" property="equipmentProcedureFiles"/>
-            <collection id="toolsDc" property="tools"/>
+            <collection id="equipmentFilesDc" property="equipmentFiles"/>
         </instance>
+        <collection id="equipmentProcedureVariantsDc"
+                    class="com.company.whiteglovefitness.entity.EquipmentProcedureVariant">
+            <fetchPlan extends="_instance_name"/>
+            <loader id="equipmentProcedureVariantsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from EquipmentProcedureVariant e order by e.name]]>
+                </query>
+            </loader>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -30,8 +38,15 @@
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <select id="equipmentProcedureTypeField" property="equipmentProcedureType"/>
-            <select id="accessConditionField" property="accessCondition"/>
-            <textField id="titleField" property="title"/>
+            <entityComboBox id="equipmentProcedureVariantField"
+                            property="equipmentProcedureVariant"
+                            itemsContainer="equipmentProcedureVariantsDc">
+                <actions>
+                    <action id="entityLookupAction" type="entity_lookup"/>
+                    <action id="entityClearAction" type="entity_clear"/>
+                </actions>
+            </entityComboBox>
+            <textField id="noteField" property="note"/>
             <textField id="estimatedMinutesField" property="estimatedMinutes"/>
             <markdownEditor id="instructionsField" colspan="2" property="instructions" height="40em"/>
         </formLayout>
@@ -60,13 +75,13 @@
                 <column property="statement" autoWidth="true"/>
             </columns>
         </dataGrid>
-        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.equipmentProcedureFiles"/>
-        <hbox id="equipmentProcedureFilesButtonsPanel" wrap="true" width="100%">
-            <button action="equipmentProcedureFilesDataGrid.createAction"/>
-            <button action="equipmentProcedureFilesDataGrid.editAction"/>
-            <button action="equipmentProcedureFilesDataGrid.removeAction"/>
+        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.equipmentFiles"/>
+        <hbox id="equipmentFilesButtonsPanel" wrap="true" width="100%">
+            <button action="equipmentFilesDataGrid.createAction"/>
+            <button action="equipmentFilesDataGrid.editAction"/>
+            <button action="equipmentFilesDataGrid.removeAction"/>
         </hbox>
-        <dataGrid id="equipmentProcedureFilesDataGrid" dataContainer="equipmentProcedureFilesDc" width="100%"
+        <dataGrid id="equipmentFilesDataGrid" dataContainer="equipmentFilesDc" width="100%"
                   minHeight="20em">
             <actions>
                 <action id="createAction" type="list_create">
@@ -85,21 +100,6 @@
                 <column property="fileType" autoWidth="true"/>
                 <column property="fileRef" autoWidth="true"/>
                 <column property="title" autoWidth="true"/>
-            </columns>
-        </dataGrid>
-        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentProcedure.tools"/>
-        <hbox id="toolsButtonsPanel" wrap="true" width="100%">
-            <button action="toolsDataGrid.addAction"/>
-            <button action="toolsDataGrid.excludeAction"/>
-        </hbox>
-        <dataGrid id="toolsDataGrid" dataContainer="toolsDc" width="100%" minHeight="20em">
-            <actions>
-                <action id="addAction" type="list_add"/>
-                <action id="excludeAction" type="list_exclude"/>
-            </actions>
-            <columns>
-                <column property="name" autoWidth="true"/>
-                <column property="photo" autoWidth="true"/>
             </columns>
         </dataGrid>
         <hbox id="detailActions">

@@ -5,6 +5,7 @@ import io.jmix.core.FileStorage;
 import io.jmix.core.FileStorageLocator;
 
 import com.vaadin.flow.server.streams.DownloadHandler;
+import org.apache.catalina.connector.ClientAbortException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,8 @@ public final class FileRefResources {
 
             try (InputStream inputStream = fileStorage.openStream(fileRef)) {
                 inputStream.transferTo(event.getOutputStream());
+            } catch (ClientAbortException e) {
+                // Browsers can cancel image/file requests when a card is re-rendered or navigation changes.
             } catch (IOException e) {
                 throw new IllegalStateException("Unable to stream file " + fileName, e);
             }

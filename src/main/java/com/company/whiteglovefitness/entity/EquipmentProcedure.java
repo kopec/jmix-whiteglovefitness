@@ -13,7 +13,8 @@ import java.util.UUID;
 
 @JmixEntity
 @Table(name = "EQUIPMENT_PROCEDURE", indexes = {
-        @Index(name = "IDX_EQUIPMENT_PROCEDURE_EQUIPMENT_MODEL", columnList = "EQUIPMENT_MODEL_ID")
+        @Index(name = "IDX_EQUIPMENT_PROCEDURE_EQUIPMENT_MODEL", columnList = "EQUIPMENT_MODEL_ID"),
+        @Index(name = "IDX_EQUIPMENT_PROCEDURE_EQUIPMENT_PROCEDURE_VARIANT", columnList = "EQUIPMENT_PROCEDURE_VARIANT_ID")
 })
 @Entity
 public class EquipmentProcedure {
@@ -30,12 +31,13 @@ public class EquipmentProcedure {
     @Column(name = "EQUIPMENT_PROCEDURE_TYPE")
     private String equipmentProcedureType;
 
-    @Column(name = "ACCESS_CONDITION")
-    private String accessCondition;
+    @JoinColumn(name = "EQUIPMENT_PROCEDURE_VARIANT_ID")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private EquipmentProcedureVariant equipmentProcedureVariant;
 
     @InstanceName
-    @Column(name = "LABEL")
-    private String title;
+    @Column(name = "NOTE")
+    private String note;
 
     @Column(name = "ESTIMATED_MINUTES")
     private Integer estimatedMinutes;
@@ -50,13 +52,15 @@ public class EquipmentProcedure {
 
     @Composition
     @OneToMany(mappedBy = "equipmentProcedure")
-    private List<EquipmentProcedureFile> equipmentProcedureFiles;
+    private List<EquipmentFile> equipmentFiles;
 
-    @JoinTable(name = "EQUIPMENT_PROCEDURE_TOOL_LINK",
-            joinColumns = @JoinColumn(name = "EQUIPMENT_PROCEDURE_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "TOOL_ID", referencedColumnName = "ID"))
-    @ManyToMany
-    private List<Tool> tools;
+    public EquipmentProcedureVariant getEquipmentProcedureVariant() {
+        return equipmentProcedureVariant;
+    }
+
+    public void setEquipmentProcedureVariant(EquipmentProcedureVariant equipmentProcedureVariant) {
+        this.equipmentProcedureVariant = equipmentProcedureVariant;
+    }
 
     public EquipmentModel getEquipmentModel() {
         return equipmentModel;
@@ -74,12 +78,12 @@ public class EquipmentProcedure {
         this.equipmentProcedureChecks = equipmentProcedureChecks;
     }
 
-    public String getTitle() {
-        return title;
+    public String getNote() {
+        return note;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getInstructions() {
@@ -98,22 +102,6 @@ public class EquipmentProcedure {
         this.estimatedMinutes = estimatedMinutes;
     }
 
-    public List<Tool> getTools() {
-        return tools;
-    }
-
-    public void setTools(List<Tool> tools) {
-        this.tools = tools;
-    }
-
-    public AccessCondition getAccessCondition() {
-        return accessCondition == null ? null : AccessCondition.fromId(accessCondition);
-    }
-
-    public void setAccessCondition(AccessCondition accessCondition) {
-        this.accessCondition = accessCondition == null ? null : accessCondition.getId();
-    }
-
     public EquipmentProcedureType getEquipmentProcedureType() {
         return equipmentProcedureType == null ? null : EquipmentProcedureType.fromId(equipmentProcedureType);
     }
@@ -122,12 +110,12 @@ public class EquipmentProcedure {
         this.equipmentProcedureType = equipmentProcedureType == null ? null : equipmentProcedureType.getId();
     }
 
-    public List<EquipmentProcedureFile> getEquipmentProcedureFiles() {
-        return equipmentProcedureFiles;
+    public List<EquipmentFile> getEquipmentFiles() {
+        return equipmentFiles;
     }
 
-    public void setEquipmentProcedureFiles(List<EquipmentProcedureFile> equipmentProcedureFiles) {
-        this.equipmentProcedureFiles = equipmentProcedureFiles;
+    public void setEquipmentFiles(List<EquipmentFile> equipmentFiles) {
+        this.equipmentFiles = equipmentFiles;
     }
 
     public UUID getId() {

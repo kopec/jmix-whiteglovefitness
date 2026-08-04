@@ -8,12 +8,14 @@
         <item view="EquipmentCategory.list"
               description="msg://com.company.whiteglovefitness/menu_config.EquipmentCategory.list.description"
               title="msg://com.company.whiteglovefitness/menu_config.EquipmentCategory.list.title"/>
+        <item view="EquipmentProcedureVariant.list"
+              description="msg://com.company.whiteglovefitness/menu_config.EquipmentProcedureVariant.list.description"
+              title="msg://com.company.whiteglovefitness/menu_config.EquipmentProcedureVariant.list.title"/>
         <item view="EquipmentModel.list"
               description="msg://com.company.whiteglovefitness/menu_config.EquipmentModel.list.description"
               title="msg://com.company.whiteglovefitness/menu_config.EquipmentModel.list.title"/>
     </menu>
     <menu id="application" title="msg://com.company.whiteglovefitness/menu.application.title" opened="true">
         <item view="User.list" title="msg://com.company.whiteglovefitness.view.user/UserListView.title"/>
-        <item view="Tool.list" title="msg://com.company.whiteglovefitness.view.tool/toolListView.title"/>
     </menu>
 </menu-config>

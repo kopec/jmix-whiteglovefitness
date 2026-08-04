@@ -1,8 +1,8 @@
-package com.company.whiteglovefitness.equipmentprocedurefile;
+package com.company.whiteglovefitness.equipmentfile;
 
 import com.company.whiteglovefitness.WhiteGloveFitnessApplication;
-import com.company.whiteglovefitness.entity.EquipmentProcedureFile;
-import com.company.whiteglovefitness.view.equipmentprocedurefile.EquipmentProcedureFileDetailView;
+import com.company.whiteglovefitness.entity.EquipmentFile;
+import com.company.whiteglovefitness.view.equipmentfile.EquipmentFileDetailView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import io.jmix.flowui.ViewNavigators;
@@ -19,16 +19,16 @@ import org.springframework.test.context.ActiveProfiles;
 @UiTest
 @SpringBootTest(classes = {WhiteGloveFitnessApplication.class, FlowuiTestAssistConfiguration.class})
 @ActiveProfiles("test")
-public class EquipmentProcedureFileUiTest {
+public class EquipmentFileUiTest {
 
     @Autowired
     ViewNavigators viewNavigators;
 
     @Test
     void opensDetailViewWithVideoPreview() {
-        viewNavigators.detailView(UiTestUtils.getCurrentView(), EquipmentProcedureFile.class)
+        viewNavigators.detailView(UiTestUtils.getCurrentView(), EquipmentFile.class)
                 .newEntity()
-                .withViewClass(EquipmentProcedureFileDetailView.class)
+                .withViewClass(EquipmentFileDetailView.class)
                 .navigate();
 
         View<?> detailView = UiTestUtils.getCurrentView();

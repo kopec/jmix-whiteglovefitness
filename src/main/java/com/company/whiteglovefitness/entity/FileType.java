@@ -6,9 +6,9 @@ import org.springframework.lang.Nullable;
 
 public enum FileType implements EnumClass<String> {
 
-    PHOTO("A"),
-    VIDEO("B"),
-    DOCUMENT("C");
+    PHOTO("PHOTO"),
+    VIDEO("VIDEO"),
+    DOCUMENT("DOCUMENT");
 
     private final String id;
 

@@ -8,16 +8,26 @@
                   class="com.company.whiteglovefitness.entity.EquipmentProcedure">
             <fetchPlan extends="_base">
                 <property name="equipmentModel" fetch="JOIN" fetchPlan="_instance_name"/>
+                <property name="equipmentProcedureVariant" fetch="JOIN" fetchPlan="_instance_name"/>
                 <property name="equipmentProcedureChecks" fetch="BATCH" fetchPlan="_base"/>
-                <property name="equipmentProcedureFiles" fetch="BATCH" fetchPlan="_base"/>
+                <property name="equipmentFiles" fetch="BATCH" fetchPlan="_base"/>
             </fetchPlan>
             <loader id="equipmentProcedureDl"/>
             <collection id="equipmentProcedureChecksDc" property="equipmentProcedureChecks"/>
-            <collection id="equipmentProcedureFilesDc" property="equipmentProcedureFiles"/>
+            <collection id="equipmentFilesDc" property="equipmentFiles"/>
         </instance>
         <collection id="documentFilesDc"
-                    class="com.company.whiteglovefitness.entity.EquipmentProcedureFile">
+                    class="com.company.whiteglovefitness.entity.EquipmentFile">
             <fetchPlan extends="_base"/>
+        </collection>
+        <collection id="equipmentProcedureVariantsDc"
+                    class="com.company.whiteglovefitness.entity.EquipmentProcedureVariant">
+            <fetchPlan extends="_instance_name"/>
+            <loader id="equipmentProcedureVariantsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from EquipmentProcedureVariant e order by e.name]]>
+                </query>
+            </loader>
         </collection>
     </data>
     <facets>
@@ -35,8 +45,11 @@
                     <responsiveStep minWidth="40em" columns="2"/>
                 </responsiveSteps>
                 <select id="equipmentProcedureTypeField" property="equipmentProcedureType" readOnly="true"/>
-                <select id="accessConditionField" property="accessCondition" readOnly="true"/>
-                <textField id="titleField" property="title" readOnly="true"/>
+                <entityComboBox id="equipmentProcedureVariantField"
+                                property="equipmentProcedureVariant"
+                                itemsContainer="equipmentProcedureVariantsDc"
+                                readOnly="true"/>
+                <textField id="noteField" property="note" readOnly="true"/>
                 <textField id="estimatedTimeField" label="msg://estimatedTimeField.label" readOnly="true"/>
                 <formItem id="instructionsItem"
                           label="msg://instructionsField.label"

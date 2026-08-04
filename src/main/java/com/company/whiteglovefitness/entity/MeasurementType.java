@@ -6,11 +6,11 @@ import org.springframework.lang.Nullable;
 
 public enum MeasurementType implements EnumClass<String> {
 
-    WIDTH("A"),
-    LENGTH("B"),
-    HEIGHT("C"),
-    DIAGONAL("D"),
-    WEIGHT("E");
+    WIDTH("WIDTH"),
+    LENGTH("LENGTH"),
+    HEIGHT("HEIGHT"),
+    DIAGONAL("DIAGONAL"),
+    WEIGHT("WEIGHT");
 
     private final String id;
 

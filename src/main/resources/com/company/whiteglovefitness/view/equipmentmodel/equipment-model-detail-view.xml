@@ -4,13 +4,18 @@
       focusComponent="form">
     <data>
         <instance id="equipmentModelDc"
-                  class="com.company.whiteglovefitness.entity.EquipmentModel">
+                class="com.company.whiteglovefitness.entity.EquipmentModel">
             <fetchPlan extends="_base">
                 <property name="equipmentCategory" fetch="JOIN" fetchPlan="_base"/>
+                <property name="equipmentFiles" fetch="BATCH" fetchPlan="_base"/>
                 <property name="equipmentMeasurements" fetch="BATCH" fetchPlan="_base"/>
-                <property name="equipmentProcedures" fetch="BATCH" fetchPlan="_base"/>
+                <property name="equipmentProcedures" fetch="BATCH" fetchPlan="_base">
+                    <property name="equipmentProcedureVariant" fetch="JOIN" fetchPlan="_instance_name"/>
+                    <property name="equipmentFiles" fetch="BATCH" fetchPlan="_base"/>
+                </property>
             </fetchPlan>
             <loader id="equipmentModelDl"/>
+            <collection id="equipmentFilesDc" property="equipmentFiles"/>
             <collection id="equipmentMeasurementsDc" property="equipmentMeasurements"/>
             <collection id="equipmentProceduresDc" property="equipmentProcedures"/>
         </instance>
@@ -45,6 +50,32 @@
             <checkbox id="requiresCalibrationField" property="requiresCalibration"/>
             <textArea id="descriptionField" colspan="2" height="8em" property="description"/>
         </formLayout>
+        <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentModel.equipmentFiles"/>
+        <hbox id="equipmentFilesButtonsPanel" wrap="true" width="100%">
+            <button action="equipmentFilesDataGrid.createAction"/>
+            <button action="equipmentFilesDataGrid.editAction"/>
+            <button action="equipmentFilesDataGrid.removeAction"/>
+        </hbox>
+        <dataGrid id="equipmentFilesDataGrid" dataContainer="equipmentFilesDc" width="100%" minHeight="20em">
+            <actions>
+                <action id="createAction" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="editAction" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="fileType" autoWidth="true"/>
+                <column property="fileRef" autoWidth="true"/>
+                <column property="title" autoWidth="true"/>
+            </columns>
+        </dataGrid>
         <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentModel.equipmentMeasurements"/>
         <hbox id="equipmentMeasurementsButtonsPanel" wrap="true" width="100%">
             <button action="equipmentMeasurementsDataGrid.createAction"/>
@@ -69,8 +100,7 @@
             <columns>
                 <column property="measurementType" autoWidth="true"/>
                 <column property="label" autoWidth="true"/>
-                <column property="value" autoWidth="true"/>
-                <column property="measurementUnit" autoWidth="true"/>
+                <column key="valueAndUnit" header="msg://measurementValueColumn.header" autoWidth="true"/>
             </columns>
         </dataGrid>
         <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentModel.equipmentProcedures"/>
@@ -95,9 +125,10 @@
             </actions>
             <columns>
                 <column property="equipmentProcedureType" autoWidth="true"/>
-                <column property="accessCondition" autoWidth="true"/>
-                <column property="title" autoWidth="true"/>
-                <column property="estimatedMinutes" autoWidth="true"/>
+                <column property="equipmentProcedureVariant" autoWidth="true"/>
+                <column property="note" autoWidth="true"/>
+                <column property="estimatedMinutes" header="msg://estimatedTimeColumn.header" autoWidth="true"/>
+                <column key="fileCounts" header="msg://procedureFilesColumn.header" autoWidth="true"/>
             </columns>
         </dataGrid>
         <hbox id="detailActions">

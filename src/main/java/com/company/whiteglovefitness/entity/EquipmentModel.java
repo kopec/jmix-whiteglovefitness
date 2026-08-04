@@ -54,7 +54,19 @@ public class EquipmentModel {
 
     @Composition
     @OneToMany(mappedBy = "equipmentModel")
+    private List<EquipmentFile> equipmentFiles;
+
+    @Composition
+    @OneToMany(mappedBy = "equipmentModel")
     private List<EquipmentProcedure> equipmentProcedures;
+
+    public List<EquipmentFile> getEquipmentFiles() {
+        return equipmentFiles;
+    }
+
+    public void setEquipmentFiles(List<EquipmentFile> equipmentFiles) {
+        this.equipmentFiles = equipmentFiles;
+    }
 
     public List<EquipmentProcedure> getEquipmentProcedures() {
         return equipmentProcedures;

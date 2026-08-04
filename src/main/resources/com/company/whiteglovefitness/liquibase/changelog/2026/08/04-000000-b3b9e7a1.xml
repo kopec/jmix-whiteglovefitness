@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS"
+        logicalFilePath="com/company/whiteglovefitness/liquibase/changelog/2026/08/04-000000-b3b9e7a1.xml">
+    <changeSet id="1" author="WhiteGloveFitness">
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="ACCESS_CONDITION" value="GROUND_LEVEL"/>
+            <where>ACCESS_CONDITION = 'A'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="ACCESS_CONDITION" value="ELEVATOR_ACCESS"/>
+            <where>ACCESS_CONDITION = 'B'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="ACCESS_CONDITION" value="STAIRS_UP"/>
+            <where>ACCESS_CONDITION = 'C'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="ACCESS_CONDITION" value="STAIRS_DOWN"/>
+            <where>ACCESS_CONDITION = 'D'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="2" author="WhiteGloveFitness">
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="LOADING_PREPARATION"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'A'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="WAREHOUSE_ASSEMBLY"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'B'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="CLIENT_SITE_DELIVERY"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'C'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="CLIENT_SITE_ASSEMBLY"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'D'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="CALIBRATION"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'E'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="TROUBLESHOOTING"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'F'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="3" author="WhiteGloveFitness">
+        <update tableName="EQUIPMENT_PROCEDURE_VARIANT">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="LOADING_PREPARATION"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'A'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE_VARIANT">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="WAREHOUSE_ASSEMBLY"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'B'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE_VARIANT">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="CLIENT_SITE_DELIVERY"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'C'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE_VARIANT">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="CLIENT_SITE_ASSEMBLY"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'D'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE_VARIANT">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="CALIBRATION"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'E'</where>
+        </update>
+        <update tableName="EQUIPMENT_PROCEDURE_VARIANT">
+            <column name="EQUIPMENT_PROCEDURE_TYPE" value="TROUBLESHOOTING"/>
+            <where>EQUIPMENT_PROCEDURE_TYPE = 'F'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="4" author="WhiteGloveFitness">
+        <update tableName="EQUIPMENT_FILE">
+            <column name="FILE_TYPE" value="PHOTO"/>
+            <where>FILE_TYPE = 'A'</where>
+        </update>
+        <update tableName="EQUIPMENT_FILE">
+            <column name="FILE_TYPE" value="VIDEO"/>
+            <where>FILE_TYPE = 'B'</where>
+        </update>
+        <update tableName="EQUIPMENT_FILE">
+            <column name="FILE_TYPE" value="DOCUMENT"/>
+            <where>FILE_TYPE = 'C'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="5" author="WhiteGloveFitness">
+        <update tableName="EQUIPMENT_MEASUREMENT">
+            <column name="MEASUREMENT_TYPE" value="WIDTH"/>
+            <where>MEASUREMENT_TYPE = 'A'</where>
+        </update>
+        <update tableName="EQUIPMENT_MEASUREMENT">
+            <column name="MEASUREMENT_TYPE" value="LENGTH"/>
+            <where>MEASUREMENT_TYPE = 'B'</where>
+        </update>
+        <update tableName="EQUIPMENT_MEASUREMENT">
+            <column name="MEASUREMENT_TYPE" value="HEIGHT"/>
+            <where>MEASUREMENT_TYPE = 'C'</where>
+        </update>
+        <update tableName="EQUIPMENT_MEASUREMENT">
+            <column name="MEASUREMENT_TYPE" value="DIAGONAL"/>
+            <where>MEASUREMENT_TYPE = 'D'</where>
+        </update>
+        <update tableName="EQUIPMENT_MEASUREMENT">
+            <column name="MEASUREMENT_TYPE" value="WEIGHT"/>
+            <where>MEASUREMENT_TYPE = 'E'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="6" author="WhiteGloveFitness">
+        <update tableName="EQUIPMENT_MEASUREMENT">
+            <column name="MEASUREMENT_UNIT" value="INCH"/>
+            <where>MEASUREMENT_UNIT = 'A'</where>
+        </update>
+        <update tableName="EQUIPMENT_MEASUREMENT">
+            <column name="MEASUREMENT_UNIT" value="POUND"/>
+            <where>MEASUREMENT_UNIT = 'B'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

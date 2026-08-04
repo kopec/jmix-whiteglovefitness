@@ -1,19 +1,20 @@
 package com.company.whiteglovefitness.equipmentmodel;
 
 import com.company.whiteglovefitness.WhiteGloveFitnessApplication;
-import com.company.whiteglovefitness.entity.AccessCondition;
+import com.company.whiteglovefitness.entity.EquipmentFile;
 import com.company.whiteglovefitness.entity.EquipmentMeasurement;
 import com.company.whiteglovefitness.entity.EquipmentModel;
 import com.company.whiteglovefitness.entity.EquipmentProcedure;
 import com.company.whiteglovefitness.entity.EquipmentProcedureCheck;
-import com.company.whiteglovefitness.entity.EquipmentProcedureFile;
 import com.company.whiteglovefitness.entity.EquipmentProcedureType;
+import com.company.whiteglovefitness.entity.EquipmentProcedureVariant;
 import com.company.whiteglovefitness.entity.FileType;
 import com.company.whiteglovefitness.entity.MeasurementType;
 import com.company.whiteglovefitness.entity.MeasurementUnit;
 import com.company.whiteglovefitness.view.equipmentprocedure.EquipmentProcedureReferenceView;
 import com.company.whiteglovefitness.view.equipmentmodel.EquipmentModelListView;
 import com.company.whiteglovefitness.view.equipmentmodel.EquipmentModelReferenceView;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.markdown.Markdown;
@@ -85,6 +86,7 @@ public class EquipmentModelReferenceViewUiTest {
     @Test
     void opensReferenceViewWithModelMeasurementsAndProcedureLinks() {
         EquipmentModel model = saveModel();
+        saveModelFiles(model);
         saveMeasurement(model);
         EquipmentProcedure procedure = saveProcedure(model, 90);
         saveFile(procedure);
@@ -96,6 +98,29 @@ public class EquipmentModelReferenceViewUiTest {
                 .navigate();
 
         View<?> referenceView = UiTestUtils.getCurrentView();
+
+        Div photoCards = UiTestUtils.getComponent(referenceView, "photoCards");
+        Assertions.assertEquals(1, photoCards.getComponentCount());
+
+        Div videoCards = UiTestUtils.getComponent(referenceView, "videoCards");
+        Assertions.assertEquals(1, videoCards.getComponentCount());
+
+        DataGrid<EquipmentFile> documentFilesDataGrid =
+                UiTestUtils.getComponent(referenceView, "documentFilesDataGrid");
+        EquipmentFile loadedModelDocument = items(documentFilesDataGrid).stream()
+                .filter(file -> "Owner manual".equals(file.getTitle()))
+                .findFirst()
+                .orElseThrow();
+
+        Button viewDocumentButton = UiTestUtils.getComponent(referenceView, "viewDocumentButton");
+        Button downloadDocumentButton = UiTestUtils.getComponent(referenceView, "downloadDocumentButton");
+        Assertions.assertFalse(viewDocumentButton.isEnabled());
+        Assertions.assertFalse(downloadDocumentButton.isEnabled());
+
+        documentFilesDataGrid.select(loadedModelDocument);
+
+        Assertions.assertTrue(viewDocumentButton.isEnabled());
+        Assertions.assertTrue(downloadDocumentButton.isEnabled());
 
         DataGrid<EquipmentMeasurement> measurementsDataGrid =
                 UiTestUtils.getComponent(referenceView, "equipmentMeasurementsDataGrid");
@@ -109,12 +134,14 @@ public class EquipmentModelReferenceViewUiTest {
                 UiTestUtils.getComponent(referenceView, "equipmentProceduresDataGrid");
         Assertions.assertTrue(proceduresDataGrid.isVisible());
         Assertions.assertTrue(proceduresDataGrid.isEnabled());
+        Assertions.assertNotNull(proceduresDataGrid.getColumnByKey("equipmentProcedureVariant"));
+        Assertions.assertNotNull(proceduresDataGrid.getColumnByKey("note"));
         EquipmentProcedure loadedProcedure = items(proceduresDataGrid).stream()
-                .filter(item -> "Delivery setup".equals(item.getTitle()))
+                .filter(item -> "Delivery setup".equals(item.getNote()))
                 .findFirst()
                 .orElseThrow();
-        Assertions.assertEquals(3, loadedProcedure.getEquipmentProcedureFiles().size());
-        Assertions.assertTrue(loadedProcedure.getEquipmentProcedureFiles().stream()
+        Assertions.assertEquals(3, loadedProcedure.getEquipmentFiles().size());
+        Assertions.assertTrue(loadedProcedure.getEquipmentFiles().stream()
                 .anyMatch(file -> FileType.DOCUMENT.equals(file.getFileType())
                         && "Setup diagram".equals(file.getTitle())));
 
@@ -141,6 +168,12 @@ public class EquipmentModelReferenceViewUiTest {
 
         View<?> referenceView = UiTestUtils.getCurrentView();
 
+        Component variantField = UiTestUtils.getComponent(referenceView, "equipmentProcedureVariantField");
+        Assertions.assertTrue(variantField.isVisible());
+
+        Component noteField = UiTestUtils.getComponent(referenceView, "noteField");
+        Assertions.assertTrue(noteField.isVisible());
+
         Markdown instructionsField = UiTestUtils.getComponent(referenceView, "instructionsField");
         Assertions.assertEquals("Level the machine before final placement.", instructionsField.getContent());
 
@@ -157,9 +190,9 @@ public class EquipmentModelReferenceViewUiTest {
         Div videoCards = UiTestUtils.getComponent(referenceView, "videoCards");
         Assertions.assertEquals(1, videoCards.getComponentCount());
 
-        DataGrid<EquipmentProcedureFile> documentFilesDataGrid =
+        DataGrid<EquipmentFile> documentFilesDataGrid =
                 UiTestUtils.getComponent(referenceView, "documentFilesDataGrid");
-        EquipmentProcedureFile loadedDocument = items(documentFilesDataGrid).stream()
+        EquipmentFile loadedDocument = items(documentFilesDataGrid).stream()
                 .filter(file -> "Setup diagram".equals(file.getTitle()))
                 .findFirst()
                 .orElseThrow();
@@ -205,6 +238,23 @@ public class EquipmentModelReferenceViewUiTest {
         save(measurement);
     }
 
+    private void saveModelFiles(EquipmentModel model) {
+        saveModelFile(model, FileType.PHOTO, "Model photo", "model-photo.jpg");
+        saveModelFile(model, FileType.VIDEO, "Model video", "model-video.mp4");
+        saveModelFile(model, FileType.DOCUMENT, "Owner manual", "owner-manual.pdf");
+    }
+
+    private void saveModelFile(EquipmentModel model, FileType fileType, String title, String fileName) {
+        EquipmentFile file = dataManager.create(EquipmentFile.class);
+        file.setEquipmentModel(model);
+        file.setFileType(fileType);
+        file.setTitle(title);
+        file.setDescription("Model reference file");
+        file.setFileRef(FileRef.create(fileStorageLocator.getDefault().getStorageName(), "test/" + fileName, fileName));
+
+        save(file);
+    }
+
     private EquipmentProcedure saveProcedure(EquipmentModel model) {
         return saveProcedure(model, 20);
     }
@@ -213,12 +263,20 @@ public class EquipmentModelReferenceViewUiTest {
         EquipmentProcedure procedure = dataManager.create(EquipmentProcedure.class);
         procedure.setEquipmentModel(model);
         procedure.setEquipmentProcedureType(EquipmentProcedureType.CLIENT_SITE_DELIVERY);
-        procedure.setAccessCondition(AccessCondition.GROUND_LEVEL);
-        procedure.setTitle("Delivery setup");
+        procedure.setEquipmentProcedureVariant(saveVariant());
+        procedure.setNote("Delivery setup");
         procedure.setEstimatedMinutes(estimatedMinutes);
         procedure.setInstructions("Level the machine before final placement.");
 
         return save(procedure);
+    }
+
+    private EquipmentProcedureVariant saveVariant() {
+        EquipmentProcedureVariant variant = dataManager.create(EquipmentProcedureVariant.class);
+        variant.setName("Ground level delivery");
+        variant.setEquipmentProcedureType(EquipmentProcedureType.CLIENT_SITE_DELIVERY);
+
+        return save(variant);
     }
 
     private void saveCheck(EquipmentProcedure procedure) {
@@ -236,7 +294,7 @@ public class EquipmentModelReferenceViewUiTest {
     }
 
     private void saveFile(EquipmentProcedure procedure, FileType fileType, String title, String fileName) {
-        EquipmentProcedureFile file = dataManager.create(EquipmentProcedureFile.class);
+        EquipmentFile file = dataManager.create(EquipmentFile.class);
         file.setEquipmentProcedure(procedure);
         file.setFileType(fileType);
         file.setTitle(title);

@@ -1,7 +1,7 @@
-package com.company.whiteglovefitness.view.equipmentprocedurefile;
+package com.company.whiteglovefitness.view.equipmentfile;
 
 import com.company.whiteglovefitness.component.VideoPlayer;
-import com.company.whiteglovefitness.entity.EquipmentProcedureFile;
+import com.company.whiteglovefitness.entity.EquipmentFile;
 import com.company.whiteglovefitness.entity.FileType;
 import com.company.whiteglovefitness.view.main.MainView;
 import com.vaadin.flow.component.Component;
@@ -19,11 +19,11 @@ import io.jmix.flowui.view.ViewDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
-@Route(value = "equipment-procedure-files/:id", layout = MainView.class)
-@ViewController(id = "EquipmentProcedureFile.detail")
-@ViewDescriptor(path = "equipment-procedure-file-detail-view.xml")
-@EditedEntityContainer("equipmentProcedureFileDc")
-public class EquipmentProcedureFileDetailView extends StandardDetailView<EquipmentProcedureFile> {
+@Route(value = "equipment-files/:id", layout = MainView.class)
+@ViewController(id = "EquipmentFile.detail")
+@ViewDescriptor(path = "equipment-file-detail-view.xml")
+@EditedEntityContainer("equipmentFileDc")
+public class EquipmentFileDetailView extends StandardDetailView<EquipmentFile> {
 
     @Autowired
     private FileStorageLocator fileStorageLocator;
@@ -60,7 +60,7 @@ public class EquipmentProcedureFileDetailView extends StandardDetailView<Equipme
     }
 
     private void updatePreview() {
-        EquipmentProcedureFile file = getEditedEntity();
+        EquipmentFile file = getEditedEntity();
         boolean video = FileType.VIDEO.equals(file.getFileType()) && file.getFileRef() != null;
         boolean photo = FileType.PHOTO.equals(file.getFileType()) && file.getFileRef() != null;
 

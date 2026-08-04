@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
       xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
-      title="msg://toolListView.title"
-      focusComponent="toolsDataGrid">
+      title="msg://equipmentProcedureVariantListView.title"
+      focusComponent="equipmentProcedureVariantsDataGrid">
     <data>
-        <collection id="toolsDc"
-                    class="com.company.whiteglovefitness.entity.Tool">
+        <collection id="equipmentProcedureVariantsDc"
+                    class="com.company.whiteglovefitness.entity.EquipmentProcedureVariant">
             <fetchPlan extends="_base"/>
-            <loader id="toolsDl" readOnly="true">
+            <loader id="equipmentProcedureVariantsDl" readOnly="true">
                 <query>
-                    <![CDATA[select e from Tool e]]>
+                    <![CDATA[select e from EquipmentProcedureVariant e order by e.name]]>
                 </query>
             </loader>
         </collection>
@@ -27,23 +27,23 @@
     </actions>
     <layout>
         <genericFilter id="genericFilter"
-                       dataLoader="toolsDl">
+                       dataLoader="equipmentProcedureVariantsDl">
             <properties include=".*"/>
         </genericFilter>
         <hbox id="buttonsPanel" wrap="true" width="100%">
             <startSlot>
-                <button id="createButton" action="toolsDataGrid.createAction"/>
-                <button id="editButton" action="toolsDataGrid.editAction"/>
-                <button id="removeButton" action="toolsDataGrid.removeAction"/>
+                <button id="createButton" action="equipmentProcedureVariantsDataGrid.createAction"/>
+                <button id="editButton" action="equipmentProcedureVariantsDataGrid.editAction"/>
+                <button id="removeButton" action="equipmentProcedureVariantsDataGrid.removeAction"/>
             </startSlot>
             <endSlot>
-                <simplePagination id="pagination" dataLoader="toolsDl"/>
+                <simplePagination id="pagination" dataLoader="equipmentProcedureVariantsDl"/>
             </endSlot>
         </hbox>
-        <dataGrid id="toolsDataGrid"
+        <dataGrid id="equipmentProcedureVariantsDataGrid"
                   width="100%"
                   minHeight="20em"
-                  dataContainer="toolsDc"
+                  dataContainer="equipmentProcedureVariantsDc"
                   columnReorderingAllowed="true">
             <actions>
                 <action id="createAction" type="list_create"/>
@@ -51,8 +51,8 @@
                 <action id="removeAction" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="name" autoWidth="true"/>
-                <column property="photo" autoWidth="true"/>
+                <column property="name"/>
+                <column property="equipmentProcedureType"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

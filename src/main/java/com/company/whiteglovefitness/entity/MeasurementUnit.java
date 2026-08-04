@@ -6,8 +6,8 @@ import org.springframework.lang.Nullable;
 
 public enum MeasurementUnit implements EnumClass<String> {
 
-    INCH("A"),
-    POUND("B");
+    INCH("INCH"),
+    POUND("POUND");
 
     private final String id;
 

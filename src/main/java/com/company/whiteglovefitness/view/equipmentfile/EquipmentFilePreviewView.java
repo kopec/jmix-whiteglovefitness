@@ -1,8 +1,9 @@
-package com.company.whiteglovefitness.view.equipmentprocedure;
+package com.company.whiteglovefitness.view.equipmentfile;
 
 import com.company.whiteglovefitness.component.FileRefResources;
 import com.company.whiteglovefitness.component.VideoPlayer;
-import com.company.whiteglovefitness.entity.EquipmentProcedureFile;
+import com.company.whiteglovefitness.entity.EquipmentFile;
+import com.company.whiteglovefitness.entity.FileType;
 import com.company.whiteglovefitness.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.button.Button;
@@ -16,7 +17,6 @@ import io.jmix.core.FileRef;
 import io.jmix.core.FileStorageLocator;
 import io.jmix.flowui.view.DialogMode;
 import io.jmix.flowui.view.MessageBundle;
-import io.jmix.flowui.view.StandardOutcome;
 import io.jmix.flowui.view.StandardView;
 import io.jmix.flowui.view.Subscribe;
 import io.jmix.flowui.view.ViewComponent;
@@ -24,11 +24,11 @@ import io.jmix.flowui.view.ViewController;
 import io.jmix.flowui.view.ViewDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Route(value = "equipment-procedure-file-preview", layout = MainView.class)
-@ViewController(id = "EquipmentProcedureFile.preview")
-@ViewDescriptor(path = "equipment-procedure-file-preview-view.xml")
+@Route(value = "equipment-file-preview", layout = MainView.class)
+@ViewController(id = "EquipmentFile.preview")
+@ViewDescriptor(path = "equipment-file-preview-view.xml")
 @DialogMode(width = "100%", height = "100%", closeOnEsc = true, closeOnOutsideClick = true, resizable = true)
-public class EquipmentProcedureFilePreviewView extends StandardView {
+public class EquipmentFilePreviewView extends StandardView {
 
     private static final double MIN_ZOOM = 0.5;
     private static final double MAX_ZOOM = 3.0;
@@ -46,14 +46,12 @@ public class EquipmentProcedureFilePreviewView extends StandardView {
     @ViewComponent
     private Div previewContent;
 
-    private EquipmentProcedureFile previewFile;
-    private PreviewMode previewMode;
+    private EquipmentFile previewFile;
     private Image previewImage;
     private double imageZoom = 1.0;
 
-    public void setPreviewFile(EquipmentProcedureFile previewFile, PreviewMode previewMode) {
+    public void setPreviewFile(EquipmentFile previewFile) {
         this.previewFile = previewFile;
-        this.previewMode = previewMode;
     }
 
     @Subscribe
@@ -71,9 +69,10 @@ public class EquipmentProcedureFilePreviewView extends StandardView {
             return;
         }
 
-        if (PreviewMode.PHOTO.equals(previewMode)) {
+        FileType fileType = previewFile.getFileType();
+        if (FileType.PHOTO.equals(fileType)) {
             renderPhotoPreview(previewFile.getFileRef());
-        } else if (PreviewMode.VIDEO.equals(previewMode)) {
+        } else if (FileType.VIDEO.equals(fileType)) {
             renderVideoPreview(previewFile.getFileRef());
         } else {
             renderDocumentPreview(previewFile.getFileRef());
@@ -145,7 +144,7 @@ public class EquipmentProcedureFilePreviewView extends StandardView {
         return emptyMessage;
     }
 
-    private String formatTitle(EquipmentProcedureFile file) {
+    private String formatTitle(EquipmentFile file) {
         if (file == null) {
             return messageBundle.getMessage("filePreviewView.title");
         }
@@ -158,9 +157,4 @@ public class EquipmentProcedureFilePreviewView extends StandardView {
                 : fileRef.getFileName();
     }
 
-    public enum PreviewMode {
-        PHOTO,
-        VIDEO,
-        DOCUMENT
-    }
 }

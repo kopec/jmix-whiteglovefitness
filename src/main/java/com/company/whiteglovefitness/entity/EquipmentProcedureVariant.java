@@ -1,6 +1,5 @@
 package com.company.whiteglovefitness.entity;
 
-import io.jmix.core.FileRef;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
@@ -10,9 +9,9 @@ import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "TOOL")
+@Table(name = "EQUIPMENT_PROCEDURE_VARIANT")
 @Entity
-public class Tool {
+public class EquipmentProcedureVariant {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
@@ -22,33 +21,26 @@ public class Tool {
     @Column(name = "NAME")
     private String name;
 
-    @Column(name = "DESCRIPTION")
-    @Lob
-    private String description;
+    @Column(name = "EQUIPMENT_PROCEDURE_TYPE")
+    private String equipmentProcedureType;
 
-    @Column(name = "PHOTO", length = 1024)
-    private FileRef photo;
-
-    @JoinTable(name = "EQUIPMENT_PROCEDURE_TOOL_LINK",
-            joinColumns = @JoinColumn(name = "TOOL_ID", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "EQUIPMENT_PROCEDURE_ID", referencedColumnName = "ID"))
-    @ManyToMany
+    @OneToMany(mappedBy = "equipmentProcedureVariant")
     private List<EquipmentProcedure> equipmentProcedures;
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public FileRef getPhoto() {
-        return photo;
+    public EquipmentProcedureType getEquipmentProcedureType() {
+        return equipmentProcedureType == null ? null : EquipmentProcedureType.fromId(equipmentProcedureType);
     }
 
-    public void setPhoto(FileRef photo) {
-        this.photo = photo;
+    public void setEquipmentProcedureType(EquipmentProcedureType equipmentProcedureType) {
+        this.equipmentProcedureType = equipmentProcedureType == null ? null : equipmentProcedureType.getId();
     }
 
     public List<EquipmentProcedure> getEquipmentProcedures() {
@@ -57,14 +49,6 @@ public class Tool {
 
     public void setEquipmentProcedures(List<EquipmentProcedure> equipmentProcedures) {
         this.equipmentProcedures = equipmentProcedures;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public UUID getId() {

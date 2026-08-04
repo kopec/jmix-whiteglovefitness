@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
-      title="msg://equipmentProcedureFileDetailView.title"
+      title="msg://equipmentFileDetailView.title"
       focusComponent="form">
     <data>
-        <instance id="equipmentProcedureFileDc"
-                  class="com.company.whiteglovefitness.entity.EquipmentProcedureFile">
+        <instance id="equipmentFileDc"
+                  class="com.company.whiteglovefitness.entity.EquipmentFile">
             <fetchPlan extends="_base"/>
-            <loader id="equipmentProcedureFileDl"/>
+            <loader id="equipmentFileDl"/>
         </instance>
     </data>
     <facets>
@@ -17,7 +17,7 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="equipmentProcedureFileDc">
+        <formLayout id="form" dataContainer="equipmentFileDc">
             <responsiveSteps>
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
@@ -27,7 +27,7 @@
                                     property="fileRef"/>
             <vbox id="previewBox" padding="false" spacing="false" colspan="2">
                 <image id="image"
-                       dataContainer="equipmentProcedureFileDc"
+                       dataContainer="equipmentFileDc"
                        property="fileRef"
                        maxHeight="40em"
                        maxWidth="100%"
