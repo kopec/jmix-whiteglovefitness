@@ -34,7 +34,7 @@ public class VideoPlayer extends Component implements HasSize, HasStyle {
 
     public VideoPlayer() {
         setControls(true);
-        setPreload("metadata");
+        setPreload("auto");
         setPlaysInline(true);
 
         getStyle().set("display", "block");

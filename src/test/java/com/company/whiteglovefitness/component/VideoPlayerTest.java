@@ -32,6 +32,13 @@ class VideoPlayerTest {
     private Path tempDir;
 
     @Test
+    void preloadsVideoDataByDefault() {
+        VideoPlayer videoPlayer = new VideoPlayer();
+
+        Assertions.assertEquals("auto", videoPlayer.getElement().getAttribute("preload"));
+    }
+
+    @Test
     void localPartialResponseReadsRequestedBytesWithoutOpeningStorageStream() throws Exception {
         Path filePath = tempDir.resolve("2026/07/22/video.mp4");
         Files.createDirectories(filePath.getParent());
