@@ -45,11 +45,11 @@ public class EquipmentViewFormatter {
         MeasurementUnit unit = measurement.getMeasurementUnit();
 
         if (value == null) {
-            return unit == null ? "" : messages.getMessage(unit);
+            return unit == null ? "" : formatMeasurementUnit(unit);
         }
 
         String formattedValue = value.stripTrailingZeros().toPlainString();
-        return unit == null ? formattedValue : formattedValue + " " + messages.getMessage(unit);
+        return unit == null ? formattedValue : formattedValue + " " + formatMeasurementUnit(unit);
     }
 
     public String formatEstimatedTime(Integer estimatedMinutes) {
@@ -106,6 +106,13 @@ public class EquipmentViewFormatter {
 
         String label = getMessage("equipmentfile", count == 1 ? singularMessageKey : pluralMessageKey);
         fileCountParts.add("%d %s".formatted(count, label));
+    }
+
+    private String formatMeasurementUnit(MeasurementUnit unit) {
+        return switch (unit) {
+            case INCH -> getMessage("equipmentmeasurement", "units.inch");
+            case POUND -> getMessage("equipmentmeasurement", "units.pound");
+        };
     }
 
     private String getMessage(String viewName, String key) {

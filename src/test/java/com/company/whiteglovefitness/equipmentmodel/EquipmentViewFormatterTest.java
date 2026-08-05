@@ -20,16 +20,21 @@ class EquipmentViewFormatterTest {
     private static final String MESSAGE_GROUP = "com.company.whiteglovefitness.view";
 
     @Test
-    void formatsMeasurementValueAndLocalizedUnit() {
+    void formatsMeasurementValueAndUnitAbbreviations() {
         Messages messages = Mockito.mock(Messages.class);
-        Mockito.when(messages.getMessage(MeasurementUnit.INCH)).thenReturn("Inch");
+        Mockito.when(messages.getMessage(MESSAGE_GROUP + ".equipmentmeasurement", "units.inch")).thenReturn("in");
+        Mockito.when(messages.getMessage(MESSAGE_GROUP + ".equipmentmeasurement", "units.pound")).thenReturn("lb");
         EquipmentViewFormatter formatter = new EquipmentViewFormatter(messages);
 
         EquipmentMeasurement measurement = new EquipmentMeasurement();
-        measurement.setValue(new BigDecimal("68.50"));
+        measurement.setValue(new BigDecimal("10.00"));
         measurement.setMeasurementUnit(MeasurementUnit.INCH);
 
-        Assertions.assertEquals("68.5 Inch", formatter.formatMeasurementValueAndUnit(measurement));
+        Assertions.assertEquals("10 in", formatter.formatMeasurementValueAndUnit(measurement));
+
+        measurement.setMeasurementUnit(MeasurementUnit.POUND);
+
+        Assertions.assertEquals("10 lb", formatter.formatMeasurementValueAndUnit(measurement));
     }
 
     @Test

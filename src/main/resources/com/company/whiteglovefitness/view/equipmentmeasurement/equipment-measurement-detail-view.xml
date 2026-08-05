@@ -23,7 +23,7 @@
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
             <select id="measurementTypeField" property="measurementType"/>
-            <textField id="labelField" property="label"/>
+            <textField id="noteField" property="note"/>
             <textField id="valueField" property="value"/>
             <select id="measurementUnitField" property="measurementUnit"/>
         </formLayout>

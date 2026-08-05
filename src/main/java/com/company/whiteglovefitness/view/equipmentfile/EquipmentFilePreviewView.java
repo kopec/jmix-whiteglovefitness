@@ -98,6 +98,7 @@ public class EquipmentFilePreviewView extends StandardView {
     private void renderVideoPreview(FileRef fileRef) {
         VideoPlayer videoPlayer = new VideoPlayer();
         videoPlayer.addClassName("reference-preview-video");
+        videoPlayer.setAutoplay(true);
         videoPlayer.setFileRef(fileRef, fileStorageLocator);
         previewContent.add(videoPlayer);
     }

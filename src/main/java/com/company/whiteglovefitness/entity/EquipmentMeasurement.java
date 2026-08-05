@@ -30,8 +30,8 @@ public class EquipmentMeasurement {
     private String measurementType;
 
     @InstanceName
-    @Column(name = "LABEL")
-    private String label;
+    @Column(name = "NOTE")
+    private String note;
 
     @Column(name = "VALUE_", precision = 10, scale = 2)
     private BigDecimal value;
@@ -39,12 +39,12 @@ public class EquipmentMeasurement {
     @Column(name = "MEASUREMENT_UNIT")
     private String measurementUnit;
 
-    public String getLabel() {
-        return label;
+    public String getNote() {
+        return note;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public MeasurementType getMeasurementType() {

@@ -72,6 +72,34 @@ class VideoPlayerTest {
     }
 
     @Test
+    void fullResponseIncludesCacheHeaders() throws Exception {
+        Path filePath = tempDir.resolve("2026/07/22/video.mp4");
+        Files.createDirectories(filePath.getParent());
+        Files.writeString(filePath, "0123456789", StandardCharsets.UTF_8);
+
+        LocalFileStorage fileStorage = new LocalFileStorage("fs", tempDir.toString());
+        FileRef fileRef = FileRef.create("fs", "2026/07/22/video.mp4", "video.mp4");
+        Object handler = createVideoRequestHandler(fileStorage, fileRef);
+        VaadinRequest request = Mockito.mock(VaadinRequest.class);
+        VaadinResponse response = Mockito.mock(VaadinResponse.class);
+        ByteArrayOutputStream responseBody = new ByteArrayOutputStream();
+
+        Mockito.when(request.getHeader("Range")).thenReturn(null);
+        Mockito.when(response.getOutputStream()).thenReturn(responseBody);
+
+        Method handleRequestMethod = handler.getClass().getDeclaredMethod("handleRequest",
+                VaadinRequest.class, VaadinResponse.class, VaadinSession.class, Element.class);
+        handleRequestMethod.setAccessible(true);
+        handleRequestMethod.invoke(handler, request, response, null, null);
+
+        Mockito.verify(response).setStatus(200);
+        Mockito.verify(response).setHeader("Cache-Control", "private, max-age=86400");
+        Mockito.verify(response).setHeader(Mockito.eq("ETag"), Mockito.matches("\"[0-9a-f]{64}\""));
+        Mockito.verify(response).setContentLengthLong(10);
+        Assertions.assertEquals("0123456789", responseBody.toString(StandardCharsets.UTF_8));
+    }
+
+    @Test
     void clientAbortDuringPartialResponseIsIgnored() throws Exception {
         Path filePath = tempDir.resolve("2026/07/22/video.mp4");
         Files.createDirectories(filePath.getParent());
@@ -109,6 +137,8 @@ class VideoPlayerTest {
 
         Mockito.verify(response).setStatus(206);
         Mockito.verify(response).setHeader("Accept-Ranges", "bytes");
+        Mockito.verify(response).setHeader("Cache-Control", "private, max-age=86400");
+        Mockito.verify(response).setHeader(Mockito.eq("ETag"), Mockito.matches("\"[0-9a-f]{64}\""));
         Mockito.verify(response).setHeader("Content-Range", "bytes 2-5/10");
         Mockito.verify(response).setContentLengthLong(4);
     }

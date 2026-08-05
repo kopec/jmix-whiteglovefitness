@@ -7,6 +7,7 @@
 
 .reference-view vaadin-markdown {
     box-sizing: border-box;
+    min-height: calc(var(--aura-line-height-m) + 2em + 2px);
     padding: var(--vaadin-input-field-padding, 0.5em 0.75em);
     background: var(--aura-surface-color);
     border: 1px solid var(--vaadin-border-color-secondary);
@@ -21,7 +22,8 @@
 .reference-view vaadin-text-field,
 .reference-view vaadin-text-area,
 .reference-view vaadin-select,
-.reference-view jmix-value-picker {
+.reference-view jmix-value-picker,
+.reference-view jmix-combo-box-picker{
     --vaadin-input-field-background: #fff;
 }
 
@@ -71,13 +73,20 @@
     background-size: cover;
 }
 
+.reference-file-card-icon-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reference-file-card-video-media {
+    aspect-ratio: 16 / 9;
+}
+
 .reference-file-card-icon {
-    box-sizing: border-box;
-    width: 100%;
-    height: 8rem;
-    padding: 2.5rem;
+    width: 3rem;
+    height: 3rem;
     color: var(--aura-accent-color);
-    background: var(--vaadin-background-container);
 }
 
 .reference-file-card-title {

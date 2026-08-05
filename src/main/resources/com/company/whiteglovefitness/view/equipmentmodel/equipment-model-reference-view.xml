@@ -76,7 +76,7 @@
                       columnReorderingAllowed="true">
                 <columns resizable="true">
                     <column property="measurementType" autoWidth="true"/>
-                    <column property="label" autoWidth="true"/>
+                    <column property="note" autoWidth="true"/>
                     <column key="valueAndUnit" header="msg://measurementValueColumn.header" autoWidth="true"/>
                 </columns>
             </dataGrid>

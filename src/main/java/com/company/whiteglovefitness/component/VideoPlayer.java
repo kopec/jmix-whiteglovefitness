@@ -21,11 +21,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -170,19 +174,23 @@ public class VideoPlayer extends Component implements HasSize, HasStyle {
     private static final class VideoRequestHandler implements ElementRequestHandler {
 
         private static final int BUFFER_SIZE = 64 * 1024;
+        private static final String CACHE_CONTROL = "private, max-age=86400";
 
         private final FileStorage fileStorage;
         private final FileRef fileRef;
         private final String fileName;
         private final String contentType;
         private final long contentLength;
+        private final String entityTag;
 
         private VideoRequestHandler(FileStorage fileStorage, FileRef fileRef, String fileName, String contentType) {
             this.fileStorage = fileStorage;
             this.fileRef = fileRef;
             this.fileName = fileName;
             this.contentType = contentType;
-            this.contentLength = resolveContentLength(fileStorage, fileRef);
+            VideoFileMetadata metadata = resolveContentMetadata(fileStorage, fileRef);
+            this.contentLength = metadata.contentLength();
+            this.entityTag = buildEntityTag(fileRef, fileName, contentType, metadata);
         }
 
         @Override
@@ -198,8 +206,8 @@ public class VideoPlayer extends Component implements HasSize, HasStyle {
                 ByteRange range = parseRange(rangeHeader, contentLength);
                 if (range == null) {
                     response.setStatus(416);
+                    setCommonHeaders(response);
                     response.setHeader("Content-Range", "bytes */" + contentLength);
-                    response.setHeader("Accept-Ranges", "bytes");
                     return;
                 }
 
@@ -279,23 +287,28 @@ public class VideoPlayer extends Component implements HasSize, HasStyle {
         private void setCommonHeaders(VaadinResponse response) {
             response.setContentType(contentType);
             response.setHeader("Accept-Ranges", "bytes");
+            response.setHeader("Cache-Control", CACHE_CONTROL);
+            response.setHeader("ETag", entityTag);
             response.setHeader("Content-Disposition", "inline; filename=\"" + fileName.replace("\"", "\\\"") + "\"");
         }
 
-        private static long resolveContentLength(FileStorage fileStorage, FileRef fileRef) {
+        private static VideoFileMetadata resolveContentMetadata(FileStorage fileStorage, FileRef fileRef) {
             if (fileStorage instanceof LocalFileStorage localFileStorage) {
-                return resolveLocalContentLength(localFileStorage, fileRef);
+                return resolveLocalContentMetadata(localFileStorage, fileRef);
             }
             if (fileStorage instanceof AwsFileStorage awsFileStorage) {
-                return resolveAwsContentLength(awsFileStorage, fileRef);
+                return resolveAwsContentMetadata(awsFileStorage, fileRef);
             }
             throw new IllegalStateException("Unable to resolve video file length without reading file stream for "
                     + fileStorage.getClass().getName());
         }
 
-        private static long resolveLocalContentLength(LocalFileStorage fileStorage, FileRef fileRef) {
+        private static VideoFileMetadata resolveLocalContentMetadata(LocalFileStorage fileStorage, FileRef fileRef) {
             try {
-                return Files.size(resolveLocalPath(fileStorage, fileRef));
+                Path path = resolveLocalPath(fileStorage, fileRef);
+                return new VideoFileMetadata(
+                        Files.size(path),
+                        Long.toString(Files.getLastModifiedTime(path).toMillis()));
             } catch (ReflectiveOperationException | IOException e) {
                 throw new IllegalStateException("Unable to resolve local video file length", e);
             }
@@ -337,7 +350,7 @@ public class VideoPlayer extends Component implements HasSize, HasStyle {
             return (Path[]) getStorageRootsMethod.invoke(fileStorage);
         }
 
-        private static long resolveAwsContentLength(AwsFileStorage fileStorage, FileRef fileRef) {
+        private static VideoFileMetadata resolveAwsContentMetadata(AwsFileStorage fileStorage, FileRef fileRef) {
             try {
                 Object s3Client = getAwsS3Client(fileStorage);
                 String bucket = getAwsBucket(fileStorage);
@@ -354,11 +367,40 @@ public class VideoPlayer extends Component implements HasSize, HasStyle {
                 Object contentLength = headObjectResponse.getClass().getMethod("contentLength").invoke(headObjectResponse);
 
                 if (contentLength instanceof Long length) {
-                    return length;
+                    return new VideoFileMetadata(length, resolveAwsEntityTag(headObjectResponse));
                 }
                 throw new IllegalStateException("Unable to resolve S3 video file length");
             } catch (ReflectiveOperationException e) {
                 throw new IllegalStateException("Unable to resolve S3 video file length", e);
+            }
+        }
+
+        private static String resolveAwsEntityTag(Object headObjectResponse) throws ReflectiveOperationException {
+            Object entityTag = headObjectResponse.getClass().getMethod("eTag").invoke(headObjectResponse);
+            return entityTag instanceof String value && !value.isBlank() ? value : "";
+        }
+
+        private static String buildEntityTag(FileRef fileRef, String fileName, String contentType,
+                                             VideoFileMetadata metadata) {
+            return "\"" + sha256Hex(String.join("\n",
+                    valueOrEmpty(fileRef.getStorageName()),
+                    valueOrEmpty(fileRef.getPath()),
+                    valueOrEmpty(fileName),
+                    valueOrEmpty(contentType),
+                    Long.toString(metadata.contentLength()),
+                    valueOrEmpty(metadata.sourceVersion()))) + "\"";
+        }
+
+        private static String valueOrEmpty(String value) {
+            return value == null ? "" : value;
+        }
+
+        private static String sha256Hex(String value) {
+            try {
+                return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256")
+                        .digest(value.getBytes(StandardCharsets.UTF_8)));
+            } catch (NoSuchAlgorithmException e) {
+                throw new IllegalStateException("SHA-256 digest is not available", e);
             }
         }
 
@@ -483,6 +525,9 @@ public class VideoPlayer extends Component implements HasSize, HasStyle {
         }
 
         private record ByteRange(long start, long end) {
+        }
+
+        private record VideoFileMetadata(long contentLength, String sourceVersion) {
         }
     }
 }

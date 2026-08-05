@@ -76,7 +76,7 @@ public class EquipmentModelDetailViewUiTest {
         Assertions.assertTrue(measurementsDataGrid.isVisible());
         Assertions.assertNotNull(measurementsDataGrid.getColumnByKey("valueAndUnit"), measurementColumnKeys(measurementsDataGrid));
         Assertions.assertTrue(items(measurementsDataGrid).stream()
-                .anyMatch(measurement -> "Overall height".equals(measurement.getLabel())
+                .anyMatch(measurement -> "Overall height".equals(measurement.getNote())
                         && new BigDecimal("68.50").compareTo(measurement.getValue()) == 0
                         && MeasurementUnit.INCH.equals(measurement.getMeasurementUnit())));
 
@@ -116,7 +116,7 @@ public class EquipmentModelDetailViewUiTest {
         EquipmentMeasurement measurement = dataManager.create(EquipmentMeasurement.class);
         measurement.setEquipmentModel(model);
         measurement.setMeasurementType(MeasurementType.HEIGHT);
-        measurement.setLabel("Overall height");
+        measurement.setNote("Overall height");
         measurement.setValue(new BigDecimal("68.50"));
         measurement.setMeasurementUnit(MeasurementUnit.INCH);
 

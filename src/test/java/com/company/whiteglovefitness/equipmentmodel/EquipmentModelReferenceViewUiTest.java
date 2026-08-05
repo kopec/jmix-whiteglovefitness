@@ -128,7 +128,7 @@ public class EquipmentModelReferenceViewUiTest {
         Assertions.assertTrue(measurementsDataGrid.isEnabled());
         Assertions.assertNotNull(measurementsDataGrid.getColumnByKey("valueAndUnit"));
         Assertions.assertTrue(items(measurementsDataGrid).stream()
-                .anyMatch(measurement -> "Overall height".equals(measurement.getLabel())));
+                .anyMatch(measurement -> "Overall height".equals(measurement.getNote())));
 
         DataGrid<EquipmentProcedure> proceduresDataGrid =
                 UiTestUtils.getComponent(referenceView, "equipmentProceduresDataGrid");
@@ -231,7 +231,7 @@ public class EquipmentModelReferenceViewUiTest {
         EquipmentMeasurement measurement = dataManager.create(EquipmentMeasurement.class);
         measurement.setEquipmentModel(model);
         measurement.setMeasurementType(MeasurementType.HEIGHT);
-        measurement.setLabel("Overall height");
+        measurement.setNote("Overall height");
         measurement.setValue(new BigDecimal("68.50"));
         measurement.setMeasurementUnit(MeasurementUnit.INCH);
 

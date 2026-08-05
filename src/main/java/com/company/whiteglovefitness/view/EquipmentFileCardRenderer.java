@@ -65,9 +65,7 @@ public class EquipmentFileCardRenderer {
         if (FileType.PHOTO.equals(fileType) && file.getFileRef() != null) {
             card.add(createPhotoThumbnail(file));
         } else {
-            Icon icon = (FileType.VIDEO.equals(fileType) ? VaadinIcon.PLAY_CIRCLE : VaadinIcon.FILE).create();
-            icon.addClassName("reference-file-card-icon");
-            card.add(icon);
+            card.add(createIconThumbnail(fileType));
         }
 
         H5 title = new H5(equipmentViewFormatter.formatFileTitle(file));
@@ -98,6 +96,20 @@ public class EquipmentFileCardRenderer {
         thumbnail.getStyle().set("background-image",
                 "url(\"%s\")".formatted(registration.getResourceUri().toASCIIString()));
         thumbnail.addDetachListener(detachEvent -> registration.unregister());
+
+        return thumbnail;
+    }
+
+    private Div createIconThumbnail(FileType fileType) {
+        Div thumbnail = new Div();
+        thumbnail.addClassNames("reference-file-card-media", "reference-file-card-icon-media");
+        if (FileType.VIDEO.equals(fileType)) {
+            thumbnail.addClassName("reference-file-card-video-media");
+        }
+
+        Icon icon = (FileType.VIDEO.equals(fileType) ? VaadinIcon.PLAY_CIRCLE : VaadinIcon.FILE).create();
+        icon.addClassName("reference-file-card-icon");
+        thumbnail.add(icon);
 
         return thumbnail;
     }
