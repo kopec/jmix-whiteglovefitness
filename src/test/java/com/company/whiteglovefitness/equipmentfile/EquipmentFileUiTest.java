@@ -143,13 +143,19 @@ public class EquipmentFileUiTest {
                 .map(Div.class::cast)
                 .findFirst()
                 .orElseThrow();
-        Image previewImage = imageWrapper.getChildren()
+        Div imageStage = imageWrapper.getChildren()
+                .filter(Div.class::isInstance)
+                .map(Div.class::cast)
+                .findFirst()
+                .orElseThrow();
+        Image previewImage = imageStage.getChildren()
                 .filter(Image.class::isInstance)
                 .map(Image.class::cast)
                 .findFirst()
                 .orElseThrow();
 
         Assertions.assertTrue(imageWrapper.hasClassName("reference-preview-image-wrapper"));
+        Assertions.assertTrue(imageStage.hasClassName("reference-preview-image-stage"));
         Assertions.assertEquals("scale(1.0)", previewImage.getStyle().get("transform"));
     }
 

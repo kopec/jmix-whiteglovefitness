@@ -48,6 +48,7 @@ public class EquipmentFilePreviewView extends StandardView {
     private Div previewContent;
 
     private EquipmentFile previewFile;
+    private Div previewImageStage;
     private Image previewImage;
     private double imageZoom = 1.0;
 
@@ -90,11 +91,14 @@ public class EquipmentFilePreviewView extends StandardView {
         previewImage = new Image(FileRefResources.inlineResource(fileRef, fileStorageLocator), formatTitle(previewFile));
         previewImage.addClassName("reference-preview-image");
 
-        Div imageWrapper = new Div(previewImage);
+        previewImageStage = new Div(previewImage);
+        previewImageStage.addClassName("reference-preview-image-stage");
+
+        Div imageWrapper = new Div(previewImageStage);
         imageWrapper.addClassName("reference-preview-image-wrapper");
         previewContent.add(imageWrapper);
-        applyImageZoom();
         enableTouchZoom(imageWrapper);
+        applyImageZoom();
     }
 
     private void enableTouchZoom(Div imageWrapper) {
@@ -108,9 +112,10 @@ public class EquipmentFilePreviewView extends StandardView {
 
         imageWrapper.getElement().executeJs("""
                 const wrapper = this;
-                const image = $0;
-                const minZoom = $1;
-                const maxZoom = $2;
+                const stage = $0;
+                const image = $1;
+                const minZoom = $2;
+                const maxZoom = $3;
 
                 if (wrapper.__wgfPinchZoomCleanup) {
                     wrapper.__wgfPinchZoomCleanup();
@@ -118,6 +123,8 @@ public class EquipmentFilePreviewView extends StandardView {
 
                 let startDistance = 0;
                 let startZoom = Number(image.getAttribute('data-zoom')) || 1;
+                let baseWidth = 0;
+                let baseHeight = 0;
 
                 const distance = touches => {
                     const first = touches[0];
@@ -125,12 +132,42 @@ public class EquipmentFilePreviewView extends StandardView {
                     return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
                 };
                 const clamp = value => Math.min(maxZoom, Math.max(minZoom, value));
+                const updateBaseSize = () => {
+                    if (!image.naturalWidth || !image.naturalHeight || !wrapper.clientWidth || !wrapper.clientHeight) {
+                        baseWidth = image.offsetWidth || wrapper.clientWidth;
+                        baseHeight = image.offsetHeight || wrapper.clientHeight;
+                        return;
+                    }
+
+                    const fit = Math.min(
+                        wrapper.clientWidth / image.naturalWidth,
+                        wrapper.clientHeight / image.naturalHeight,
+                        1
+                    );
+                    baseWidth = Math.max(1, Math.floor(image.naturalWidth * fit));
+                    baseHeight = Math.max(1, Math.floor(image.naturalHeight * fit));
+                    image.style.width = `${baseWidth}px`;
+                    image.style.height = `${baseHeight}px`;
+                };
+                const updateStageSize = zoom => {
+                    updateBaseSize();
+                    if (zoom <= 1) {
+                        stage.style.width = '100%';
+                        stage.style.height = '100%';
+                        return;
+                    }
+
+                    stage.style.width = `${Math.max(wrapper.clientWidth, Math.ceil(baseWidth * zoom))}px`;
+                    stage.style.height = `${Math.max(wrapper.clientHeight, Math.ceil(baseHeight * zoom))}px`;
+                };
                 const setZoom = value => {
                     const zoom = clamp(value);
                     image.setAttribute('data-zoom', String(zoom));
                     image.style.transform = `scale(${zoom})`;
+                    updateStageSize(zoom);
                     return zoom;
                 };
+                const refreshZoom = () => setZoom(Number(image.getAttribute('data-zoom')) || 1);
                 const onTouchStart = event => {
                     if (event.touches.length === 2) {
                         event.preventDefault();
@@ -157,13 +194,20 @@ public class EquipmentFilePreviewView extends StandardView {
                 wrapper.addEventListener('touchmove', onTouchMove, {passive: false});
                 wrapper.addEventListener('touchend', onTouchEnd);
                 wrapper.addEventListener('touchcancel', onTouchEnd);
+                window.addEventListener('resize', refreshZoom);
+                image.addEventListener('load', refreshZoom);
+                stage.__wgfRefreshZoomStage = refreshZoom;
+                refreshZoom();
                 wrapper.__wgfPinchZoomCleanup = () => {
                     wrapper.removeEventListener('touchstart', onTouchStart);
                     wrapper.removeEventListener('touchmove', onTouchMove);
                     wrapper.removeEventListener('touchend', onTouchEnd);
                     wrapper.removeEventListener('touchcancel', onTouchEnd);
+                    window.removeEventListener('resize', refreshZoom);
+                    image.removeEventListener('load', refreshZoom);
+                    delete stage.__wgfRefreshZoomStage;
                 };
-                """, previewImage.getElement(), MIN_ZOOM, MAX_ZOOM);
+                """, previewImageStage.getElement(), previewImage.getElement(), MIN_ZOOM, MAX_ZOOM);
     }
 
     private void renderVideoPreview(FileRef fileRef) {
@@ -210,6 +254,10 @@ public class EquipmentFilePreviewView extends StandardView {
         if (previewImage != null) {
             previewImage.getStyle().set("transform", "scale(" + imageZoom + ")");
             previewImage.getElement().setAttribute("data-zoom", Double.toString(imageZoom));
+        }
+        if (previewImageStage != null) {
+            previewImageStage.getElement()
+                    .executeJs("this.__wgfRefreshZoomStage && this.__wgfRefreshZoomStage();");
         }
     }
 

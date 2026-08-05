@@ -165,9 +165,7 @@
 }
 
 .reference-preview-image-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     width: 100%;
     height: 100%;
     overflow: auto;
@@ -175,7 +173,17 @@
     touch-action: pan-x pan-y;
 }
 
+.reference-preview-image-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100%;
+    min-height: 100%;
+    overflow: visible;
+}
+
 .reference-preview-image {
+    display: block;
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
