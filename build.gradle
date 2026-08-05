@@ -18,10 +18,11 @@ def supportedJavaVersions = [
         JavaVersion.VERSION_21,
         JavaVersion.toVersion(25)
 ]
+def preferredJavaVersion = JavaVersion.toVersion(25)
 
 if (!supportedJavaVersions.contains(JavaVersion.current())) {
     throw new GradleException(
-            "WhiteGloveFitness must be built with Java 21 or Java 25. " +
+            "WhiteGloveFitness must be built with Java 21 or Java 25; Java ${preferredJavaVersion} is preferred. " +
                     "Current Gradle JVM: ${JavaVersion.current()} at ${System.getProperty('java.home')}"
     )
 }

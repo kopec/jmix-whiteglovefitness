@@ -22,7 +22,7 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <textArea id="statementField" property="statement" minWidth="25em" height="8em"/>
+            <textArea id="statementField" property="statement" minWidth="20em" height="8em"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>

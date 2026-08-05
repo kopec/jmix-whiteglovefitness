@@ -25,7 +25,7 @@
             <select id="measurementTypeField" property="measurementType"/>
             <textField id="noteField" property="note"/>
             <textField id="valueField" property="value"/>
-            <select id="measurementUnitField" property="measurementUnit"/>
+            <select id="measurementUnitField" property="measurementUnit" readOnly="true"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseButton" action="saveCloseAction"/>

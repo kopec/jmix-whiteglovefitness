@@ -48,7 +48,7 @@
                 </actions>
             </entityPicker>
             <checkbox id="requiresCalibrationField" property="requiresCalibration"/>
-            <textArea id="descriptionField" colspan="2" height="8em" property="description"/>
+            <markdownEditor id="descriptionField" colspan="2" height="20em" property="description"/>
         </formLayout>
         <h4 text="msg://com.company.whiteglovefitness.entity/EquipmentModel.equipmentFiles"/>
         <hbox id="equipmentFilesButtonsPanel" wrap="true" width="100%">

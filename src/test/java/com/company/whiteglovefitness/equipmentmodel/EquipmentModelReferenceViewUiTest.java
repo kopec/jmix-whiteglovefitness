@@ -99,6 +99,9 @@ public class EquipmentModelReferenceViewUiTest {
 
         View<?> referenceView = UiTestUtils.getCurrentView();
 
+        Markdown descriptionField = UiTestUtils.getComponent(referenceView, "descriptionField");
+        Assertions.assertEquals("Reference **model** for field worker UI test.", descriptionField.getContent());
+
         Div photoCards = UiTestUtils.getComponent(referenceView, "photoCards");
         Assertions.assertEquals(1, photoCards.getComponentCount());
 
@@ -221,7 +224,7 @@ public class EquipmentModelReferenceViewUiTest {
         EquipmentModel model = dataManager.create(EquipmentModel.class);
         model.setName("Reference model");
         model.setModelNumber("REF-1000");
-        model.setDescription("Reference model for field worker UI test.");
+        model.setDescription("Reference **model** for field worker UI test.");
         model.setRequiresCalibration(false);
 
         return save(model);

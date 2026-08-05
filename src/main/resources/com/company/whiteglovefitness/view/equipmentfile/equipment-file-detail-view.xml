@@ -22,9 +22,9 @@
                 <responsiveStep minWidth="0" columns="1"/>
                 <responsiveStep minWidth="40em" columns="2"/>
             </responsiveSteps>
-            <select id="fileTypeField" property="fileType"/>
             <fileStorageUploadField id="fileRefField" clearButtonVisible="true" fileNameVisible="true"
                                     property="fileRef"/>
+            <select id="fileTypeField" property="fileType" readOnly="true"/>
             <vbox id="previewBox" padding="false" spacing="false" colspan="2">
                 <image id="image"
                        dataContainer="equipmentFileDc"

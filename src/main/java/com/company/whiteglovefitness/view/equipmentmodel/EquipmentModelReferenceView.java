@@ -16,6 +16,7 @@ import com.vaadin.flow.component.ClickEvent;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.markdown.Markdown;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
@@ -77,6 +78,9 @@ public class EquipmentModelReferenceView extends StandardDetailView<EquipmentMod
     private Div videoCards;
 
     @ViewComponent
+    private Markdown descriptionField;
+
+    @ViewComponent
     private HorizontalLayout documentFilesButtonsPanel;
 
     @ViewComponent
@@ -107,6 +111,7 @@ public class EquipmentModelReferenceView extends StandardDetailView<EquipmentMod
 
     @Subscribe
     public void onBeforeShow(final BeforeShowEvent event) {
+        descriptionField.setContent(formatDescription(getEditedEntity().getDescription()));
         populateFileSections();
     }
 
@@ -239,5 +244,9 @@ public class EquipmentModelReferenceView extends StandardDetailView<EquipmentMod
                 .map(EquipmentFile::getFileType)
                 .filter(fileType::equals)
                 .count();
+    }
+
+    private String formatDescription(String description) {
+        return description == null ? "" : description;
     }
 }

@@ -129,6 +129,32 @@
     display: none;
 }
 
+.reference-preview-toolbar-button {
+    flex: 0 0 auto;
+    width: 2.25rem;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    --vaadin-button-padding: 0;
+}
+
+.reference-preview-toolbar-button vaadin-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+@media (max-width: 480px) {
+    .reference-preview-toolbar {
+        gap: 0.25rem;
+        padding: var(--vaadin-padding-xs);
+    }
+
+    .reference-preview-toolbar-button {
+        width: 2rem;
+        min-width: 2rem;
+        height: 2rem;
+    }
+}
+
 .reference-preview-content {
     display: flex;
     align-items: center;
@@ -145,6 +171,8 @@
     width: 100%;
     height: 100%;
     overflow: auto;
+    overscroll-behavior: contain;
+    touch-action: pan-x pan-y;
 }
 
 .reference-preview-image {

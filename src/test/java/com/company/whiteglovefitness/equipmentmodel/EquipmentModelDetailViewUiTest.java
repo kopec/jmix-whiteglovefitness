@@ -10,12 +10,15 @@ import com.company.whiteglovefitness.entity.EquipmentProcedureVariant;
 import com.company.whiteglovefitness.entity.FileType;
 import com.company.whiteglovefitness.entity.MeasurementType;
 import com.company.whiteglovefitness.entity.MeasurementUnit;
+import com.company.whiteglovefitness.view.equipmentmeasurement.EquipmentMeasurementDetailView;
 import com.company.whiteglovefitness.view.equipmentmodel.EquipmentModelDetailView;
 import io.jmix.core.DataManager;
 import io.jmix.core.FileRef;
 import io.jmix.core.FileStorageLocator;
 import io.jmix.flowui.ViewNavigators;
 import io.jmix.flowui.component.grid.DataGrid;
+import io.jmix.flowui.component.markdowneditor.MarkdownEditor;
+import io.jmix.flowui.component.select.JmixSelect;
 import io.jmix.flowui.data.grid.DataGridItems;
 import io.jmix.flowui.testassist.FlowuiTestAssistConfiguration;
 import io.jmix.flowui.testassist.UiTest;
@@ -64,6 +67,10 @@ public class EquipmentModelDetailViewUiTest {
 
         View<?> detailView = UiTestUtils.getCurrentView();
 
+        MarkdownEditor descriptionField = UiTestUtils.getComponent(detailView, "descriptionField");
+        Assertions.assertTrue(descriptionField.isVisible());
+        Assertions.assertEquals("20em", descriptionField.getHeight());
+
         DataGrid<EquipmentFile> filesDataGrid =
                 UiTestUtils.getComponent(detailView, "equipmentFilesDataGrid");
         Assertions.assertTrue(filesDataGrid.isVisible());
@@ -93,6 +100,31 @@ public class EquipmentModelDetailViewUiTest {
                 .findFirst()
                 .orElseThrow();
         Assertions.assertEquals(3, loadedProcedure.getEquipmentFiles().size());
+    }
+
+    @Test
+    void selectsMeasurementUnitFromMeasurementType() {
+        viewNavigators.detailView(UiTestUtils.getCurrentView(), EquipmentMeasurement.class)
+                .newEntity()
+                .withViewClass(EquipmentMeasurementDetailView.class)
+                .navigate();
+
+        View<?> detailView = UiTestUtils.getCurrentView();
+        JmixSelect<MeasurementType> measurementTypeField =
+                UiTestUtils.getComponent(detailView, "measurementTypeField");
+        JmixSelect<MeasurementUnit> measurementUnitField =
+                UiTestUtils.getComponent(detailView, "measurementUnitField");
+
+        Assertions.assertTrue(measurementUnitField.isReadOnly());
+        Assertions.assertNull(measurementUnitField.getValue());
+
+        measurementTypeField.setValue(MeasurementType.HEIGHT);
+
+        Assertions.assertEquals(MeasurementUnit.INCH, measurementUnitField.getValue());
+
+        measurementTypeField.setValue(MeasurementType.WEIGHT);
+
+        Assertions.assertEquals(MeasurementUnit.POUND, measurementUnitField.getValue());
     }
 
     @AfterEach

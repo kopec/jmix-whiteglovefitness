@@ -45,7 +45,14 @@
                 <entityPicker id="equipmentBrandField" property="equipmentBrand" readOnly="true"/>
                 <entityPicker id="equipmentCategoryField" property="equipmentCategory" readOnly="true"/>
                 <checkbox id="requiresCalibrationField" property="requiresCalibration" readOnly="true"/>
-                <textArea id="descriptionField" property="description" colspan="2" height="8em" readOnly="true"/>
+                <formItem id="descriptionItem"
+                          label="msg://com.company.whiteglovefitness.entity/EquipmentModel.description"
+                          classNames="markdown-form-item"
+                          colspan="2">
+                    <markdown id="descriptionField"
+                              width="100%"
+                              content=" "/>
+                </formItem>
             </formLayout>
 
             <h4 text="msg://photosSection.text"/>
