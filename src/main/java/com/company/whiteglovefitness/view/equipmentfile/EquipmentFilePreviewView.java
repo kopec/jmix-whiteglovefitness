@@ -6,6 +6,7 @@ import com.company.whiteglovefitness.entity.EquipmentFile;
 import com.company.whiteglovefitness.entity.FileType;
 import com.company.whiteglovefitness.view.main.MainView;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.IFrame;
@@ -31,7 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class EquipmentFilePreviewView extends StandardView {
 
     private static final double MIN_ZOOM = 0.5;
-    private static final double MAX_ZOOM = 3.0;
+    private static final double MAX_ZOOM = 4.0;
     private static final double ZOOM_STEP = 0.25;
     private static final String IMAGE_ZOOM_CHANGED_EVENT = "image-zoom-changed";
 
@@ -48,6 +49,7 @@ public class EquipmentFilePreviewView extends StandardView {
     private Div previewContent;
 
     private EquipmentFile previewFile;
+    private Div previewImageWrapper;
     private Div previewImageStage;
     private Image previewImage;
     private double imageZoom = 1.0;
@@ -63,8 +65,12 @@ public class EquipmentFilePreviewView extends StandardView {
     }
 
     private void renderPreview() {
+        cleanupImageZoom();
         previewToolbar.removeAll();
         previewContent.removeAll();
+        previewImageWrapper = null;
+        previewImageStage = null;
+        previewImage = null;
 
         if (previewFile == null || previewFile.getFileRef() == null) {
             previewContent.add(createEmptyMessage());
@@ -96,6 +102,7 @@ public class EquipmentFilePreviewView extends StandardView {
 
         Div imageWrapper = new Div(previewImageStage);
         imageWrapper.addClassName("reference-preview-image-wrapper");
+        previewImageWrapper = imageWrapper;
         previewContent.add(imageWrapper);
         enableTouchZoom(imageWrapper);
         applyImageZoom();
@@ -117,8 +124,8 @@ public class EquipmentFilePreviewView extends StandardView {
                 const minZoom = $2;
                 const maxZoom = $3;
 
-                if (wrapper.__wgfPinchZoomCleanup) {
-                    wrapper.__wgfPinchZoomCleanup();
+                if (wrapper.__wgfImageZoomCleanup) {
+                    wrapper.__wgfImageZoomCleanup();
                 }
 
                 let startDistance = 0;
@@ -143,6 +150,13 @@ public class EquipmentFilePreviewView extends StandardView {
                 const clamp = value => Math.min(maxZoom, Math.max(minZoom, value));
                 const clampRatio = value => Math.min(1, Math.max(0, value));
                 const clampScroll = (value, max) => Math.min(Math.max(0, value), Math.max(0, max));
+                const visibleCenter = () => {
+                    const wrapperRect = wrapper.getBoundingClientRect();
+                    return {
+                        clientX: wrapperRect.left + wrapperRect.width / 2,
+                        clientY: wrapperRect.top + wrapperRect.height / 2
+                    };
+                };
                 const updateBaseSize = () => {
                     if (!image.naturalWidth || !image.naturalHeight || !wrapper.clientWidth || !wrapper.clientHeight) {
                         baseWidth = image.offsetWidth || wrapper.clientWidth;
@@ -201,6 +215,7 @@ public class EquipmentFilePreviewView extends StandardView {
                     return zoom;
                 };
                 const refreshZoom = () => setZoom(Number(image.getAttribute('data-zoom')) || 1);
+                const setZoomAtVisibleCenter = value => setZoom(value, visibleCenter());
                 const onTouchStart = event => {
                     if (event.touches.length === 2) {
                         event.preventDefault();
@@ -244,8 +259,9 @@ public class EquipmentFilePreviewView extends StandardView {
                 window.addEventListener('resize', refreshZoom);
                 image.addEventListener('load', refreshZoom);
                 stage.__wgfRefreshZoomStage = refreshZoom;
+                stage.__wgfSetZoomAtVisibleCenter = setZoomAtVisibleCenter;
                 refreshZoom();
-                wrapper.__wgfPinchZoomCleanup = () => {
+                wrapper.__wgfImageZoomCleanup = () => {
                     wrapper.removeEventListener('touchstart', onTouchStart);
                     wrapper.removeEventListener('touchmove', onTouchMove);
                     wrapper.removeEventListener('touchend', onTouchEnd);
@@ -253,6 +269,8 @@ public class EquipmentFilePreviewView extends StandardView {
                     window.removeEventListener('resize', refreshZoom);
                     image.removeEventListener('load', refreshZoom);
                     delete stage.__wgfRefreshZoomStage;
+                    delete stage.__wgfSetZoomAtVisibleCenter;
+                    delete wrapper.__wgfImageZoomCleanup;
                 };
                 """, previewImageStage.getElement(), previewImage.getElement(), MIN_ZOOM, MAX_ZOOM);
     }
@@ -284,17 +302,17 @@ public class EquipmentFilePreviewView extends StandardView {
 
     private void onZoomIn(ClickEvent<Button> event) {
         imageZoom = clampZoom(imageZoom + ZOOM_STEP);
-        applyImageZoom();
+        applyImageZoomAtVisibleCenter();
     }
 
     private void onZoomOut(ClickEvent<Button> event) {
         imageZoom = clampZoom(imageZoom - ZOOM_STEP);
-        applyImageZoom();
+        applyImageZoomAtVisibleCenter();
     }
 
     private void onResetZoom(ClickEvent<Button> event) {
         imageZoom = 1.0;
-        applyImageZoom();
+        applyImageZoomAtVisibleCenter();
     }
 
     private void applyImageZoom() {
@@ -306,6 +324,34 @@ public class EquipmentFilePreviewView extends StandardView {
             previewImageStage.getElement()
                     .executeJs("this.__wgfRefreshZoomStage && this.__wgfRefreshZoomStage();");
         }
+    }
+
+    private void applyImageZoomAtVisibleCenter() {
+        if (previewImageStage != null && previewImage != null) {
+            previewImageStage.getElement().executeJs("""
+                    if (this.__wgfSetZoomAtVisibleCenter) {
+                        this.__wgfSetZoomAtVisibleCenter($0);
+                    } else if (this.__wgfRefreshZoomStage) {
+                        const image = $1;
+                        image.setAttribute('data-zoom', String($0));
+                        image.style.transform = 'scale(' + $0 + ')';
+                        this.__wgfRefreshZoomStage();
+                    }
+                    """, imageZoom, previewImage.getElement());
+        }
+    }
+
+    private void cleanupImageZoom() {
+        if (previewImageWrapper != null) {
+            previewImageWrapper.getElement()
+                    .executeJs("this.__wgfImageZoomCleanup && this.__wgfImageZoomCleanup();");
+        }
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        cleanupImageZoom();
+        super.onDetach(detachEvent);
     }
 
     private double clampZoom(double zoom) {

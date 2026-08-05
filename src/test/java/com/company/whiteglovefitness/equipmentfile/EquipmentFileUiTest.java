@@ -157,6 +157,16 @@ public class EquipmentFileUiTest {
         Assertions.assertTrue(imageWrapper.hasClassName("reference-preview-image-wrapper"));
         Assertions.assertTrue(imageStage.hasClassName("reference-preview-image-stage"));
         Assertions.assertEquals("scale(1.0)", previewImage.getStyle().get("transform"));
+
+        buttons.get(0).click();
+        Assertions.assertEquals(1.25, getDoubleField(previewView, "imageZoom"));
+
+        buttons.get(1).click();
+        Assertions.assertEquals(1.0, getDoubleField(previewView, "imageZoom"));
+
+        buttons.get(0).click();
+        buttons.get(2).click();
+        Assertions.assertEquals(1.0, getDoubleField(previewView, "imageZoom"));
     }
 
     @Test
@@ -192,6 +202,12 @@ public class EquipmentFileUiTest {
         Field field = target.getClass().getDeclaredField(fieldName);
         field.setAccessible(true);
         field.set(target, value);
+    }
+
+    private static double getDoubleField(Object target, String fieldName) throws Exception {
+        Field field = target.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.getDouble(target);
     }
 
     private static void invokeMethod(Object target, String methodName, Object... arguments) throws Exception {
