@@ -123,6 +123,7 @@ public class EquipmentFilePreviewView extends StandardView {
 
                 let startDistance = 0;
                 let startZoom = Number(image.getAttribute('data-zoom')) || 1;
+                let lastMidpoint = null;
                 let baseWidth = 0;
                 let baseHeight = 0;
 
@@ -131,7 +132,17 @@ public class EquipmentFilePreviewView extends StandardView {
                     const second = touches[1];
                     return Math.hypot(second.clientX - first.clientX, second.clientY - first.clientY);
                 };
+                const midpoint = touches => {
+                    const first = touches[0];
+                    const second = touches[1];
+                    return {
+                        clientX: (first.clientX + second.clientX) / 2,
+                        clientY: (first.clientY + second.clientY) / 2
+                    };
+                };
                 const clamp = value => Math.min(maxZoom, Math.max(minZoom, value));
+                const clampRatio = value => Math.min(1, Math.max(0, value));
+                const clampScroll = (value, max) => Math.min(Math.max(0, value), Math.max(0, max));
                 const updateBaseSize = () => {
                     if (!image.naturalWidth || !image.naturalHeight || !wrapper.clientWidth || !wrapper.clientHeight) {
                         baseWidth = image.offsetWidth || wrapper.clientWidth;
@@ -160,11 +171,33 @@ public class EquipmentFilePreviewView extends StandardView {
                     stage.style.width = `${Math.max(wrapper.clientWidth, Math.ceil(baseWidth * zoom))}px`;
                     stage.style.height = `${Math.max(wrapper.clientHeight, Math.ceil(baseHeight * zoom))}px`;
                 };
-                const setZoom = value => {
+                const setZoom = (value, focalPoint = null) => {
+                    const beforeRect = focalPoint ? image.getBoundingClientRect() : null;
+                    const focalRatioX = beforeRect && beforeRect.width > 0
+                        ? clampRatio((focalPoint.clientX - beforeRect.left) / beforeRect.width)
+                        : 0.5;
+                    const focalRatioY = beforeRect && beforeRect.height > 0
+                        ? clampRatio((focalPoint.clientY - beforeRect.top) / beforeRect.height)
+                        : 0.5;
                     const zoom = clamp(value);
                     image.setAttribute('data-zoom', String(zoom));
                     image.style.transform = `scale(${zoom})`;
                     updateStageSize(zoom);
+
+                    if (focalPoint && beforeRect && beforeRect.width > 0 && beforeRect.height > 0) {
+                        const afterRect = image.getBoundingClientRect();
+                        const focusedClientX = afterRect.left + afterRect.width * focalRatioX;
+                        const focusedClientY = afterRect.top + afterRect.height * focalRatioY;
+                        wrapper.scrollLeft = clampScroll(
+                            wrapper.scrollLeft + focusedClientX - focalPoint.clientX,
+                            wrapper.scrollWidth - wrapper.clientWidth
+                        );
+                        wrapper.scrollTop = clampScroll(
+                            wrapper.scrollTop + focusedClientY - focalPoint.clientY,
+                            wrapper.scrollHeight - wrapper.clientHeight
+                        );
+                    }
+
                     return zoom;
                 };
                 const refreshZoom = () => setZoom(Number(image.getAttribute('data-zoom')) || 1);
@@ -173,17 +206,31 @@ public class EquipmentFilePreviewView extends StandardView {
                         event.preventDefault();
                         startDistance = distance(event.touches);
                         startZoom = Number(image.getAttribute('data-zoom')) || 1;
+                        lastMidpoint = midpoint(event.touches);
                     }
                 };
                 const onTouchMove = event => {
                     if (event.touches.length === 2 && startDistance > 0) {
                         event.preventDefault();
-                        setZoom(startZoom * distance(event.touches) / startDistance);
+                        const currentMidpoint = midpoint(event.touches);
+                        if (lastMidpoint) {
+                            wrapper.scrollLeft = clampScroll(
+                                wrapper.scrollLeft + lastMidpoint.clientX - currentMidpoint.clientX,
+                                wrapper.scrollWidth - wrapper.clientWidth
+                            );
+                            wrapper.scrollTop = clampScroll(
+                                wrapper.scrollTop + lastMidpoint.clientY - currentMidpoint.clientY,
+                                wrapper.scrollHeight - wrapper.clientHeight
+                            );
+                        }
+                        setZoom(startZoom * distance(event.touches) / startDistance, currentMidpoint);
+                        lastMidpoint = currentMidpoint;
                     }
                 };
                 const onTouchEnd = event => {
                     if (event.touches.length < 2 && startDistance > 0) {
                         startDistance = 0;
+                        lastMidpoint = null;
                         wrapper.dispatchEvent(new CustomEvent('image-zoom-changed', {
                             detail: {zoom: Number(image.getAttribute('data-zoom')) || 1}
                         }));
