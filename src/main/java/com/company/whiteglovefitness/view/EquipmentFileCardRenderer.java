@@ -91,7 +91,7 @@ public class EquipmentFileCardRenderer {
         StreamRegistration registration = VaadinSession.getCurrent()
                 .getResourceRegistry()
                 .registerResource(
-                        FileRefResources.inlineResource(file.getFileRef(), fileStorageLocator).allowDisabled(),
+                        FileRefResources.thumbnailResource(file.getFileRef(), fileStorageLocator).allowDisabled(),
                         thumbnail.getElement());
         thumbnail.getStyle().set("background-image",
                 "url(\"%s\")".formatted(registration.getResourceUri().toASCIIString()));
