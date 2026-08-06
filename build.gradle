@@ -35,6 +35,10 @@ repositories {
 }
 
 dependencies {
+    implementation 'io.jmix.aitools:jmix-aitools-starter'
+    implementation 'io.jmix.aitools:jmix-aitools-flowui-data-starter'
+    implementation 'io.jmix.aitools:jmix-aitools-flowui-starter'
+
     implementation 'io.jmix.awsfs:jmix-awsfs-starter'
 
     implementation 'io.jmix.core:jmix-core-starter'
@@ -59,6 +63,7 @@ dependencies {
     testImplementation 'io.jmix.flowui:jmix-flowui-test-assist'
     testRuntimeOnly 'org.hsqldb:hsqldb'
     implementation 'org.postgresql:postgresql'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
 }
 
 configurations.implementation {
