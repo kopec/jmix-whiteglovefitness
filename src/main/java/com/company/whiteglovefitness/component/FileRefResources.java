@@ -31,8 +31,8 @@ import java.util.Locale;
 
 public final class FileRefResources {
 
-    private static final int DEFAULT_THUMBNAIL_MAX_WIDTH = 480;
-    private static final int DEFAULT_THUMBNAIL_MAX_HEIGHT = 360;
+    private static final int DEFAULT_THUMBNAIL_MAX_WIDTH = 800;
+    private static final int DEFAULT_THUMBNAIL_MAX_HEIGHT = 600;
     private static final float THUMBNAIL_JPEG_QUALITY = 0.82f;
 
     private FileRefResources() {

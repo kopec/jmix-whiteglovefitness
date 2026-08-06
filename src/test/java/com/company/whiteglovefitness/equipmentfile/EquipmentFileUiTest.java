@@ -10,6 +10,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import io.jmix.core.DataManager;
 import io.jmix.core.FileRef;
@@ -117,6 +118,7 @@ public class EquipmentFileUiTest {
         EquipmentFile photoFile = dataManager.create(EquipmentFile.class);
         photoFile.setFileType(FileType.PHOTO);
         photoFile.setFileRef(FileRef.create("fs", "test/model-photo.jpg", "model-photo.jpg"));
+        photoFile.setDescription("Photo placement notes");
 
         viewNavigators.view(UiTestUtils.getCurrentView(), EquipmentFilePreviewView.class)
                 .navigate();
@@ -138,7 +140,12 @@ public class EquipmentFileUiTest {
                 .containsAll(List.of("Zoom in", "Zoom out", "Reset zoom")));
 
         Div previewContent = UiTestUtils.getComponent(previewView, "previewContent");
-        Div imageWrapper = previewContent.getChildren()
+        Div mediaLayout = previewContent.getChildren()
+                .filter(Div.class::isInstance)
+                .map(Div.class::cast)
+                .findFirst()
+                .orElseThrow();
+        Div imageWrapper = mediaLayout.getChildren()
                 .filter(Div.class::isInstance)
                 .map(Div.class::cast)
                 .findFirst()
@@ -153,9 +160,17 @@ public class EquipmentFileUiTest {
                 .map(Image.class::cast)
                 .findFirst()
                 .orElseThrow();
+        Span description = mediaLayout.getChildren()
+                .filter(Span.class::isInstance)
+                .map(Span.class::cast)
+                .findFirst()
+                .orElseThrow();
 
+        Assertions.assertTrue(mediaLayout.hasClassName("reference-preview-media-layout"));
         Assertions.assertTrue(imageWrapper.hasClassName("reference-preview-image-wrapper"));
         Assertions.assertTrue(imageStage.hasClassName("reference-preview-image-stage"));
+        Assertions.assertTrue(description.hasClassName("reference-preview-description"));
+        Assertions.assertEquals("Photo placement notes", description.getText());
         Assertions.assertEquals("scale(1.0)", previewImage.getStyle().get("transform"));
 
         buttons.get(0).click();
@@ -182,6 +197,7 @@ public class EquipmentFileUiTest {
         EquipmentFile videoFile = dataManager.create(EquipmentFile.class);
         videoFile.setFileType(FileType.VIDEO);
         videoFile.setFileRef(FileRef.create("fs", "2026/08/04/preview-video.mp4", "preview-video.mp4"));
+        videoFile.setDescription("Video inspection notes");
 
         viewNavigators.view(UiTestUtils.getCurrentView(), EquipmentFilePreviewView.class)
                 .navigate();
@@ -192,10 +208,26 @@ public class EquipmentFileUiTest {
         invokeMethod(previewView, "onBeforeShow", (Object) null);
 
         Div previewContent = UiTestUtils.getComponent(previewView, "previewContent");
-        Component preview = previewContent.getChildren().findFirst().orElseThrow();
+        Div mediaLayout = previewContent.getChildren()
+                .filter(Div.class::isInstance)
+                .map(Div.class::cast)
+                .findFirst()
+                .orElseThrow();
+        Component preview = mediaLayout.getChildren()
+                .filter(VideoPlayer.class::isInstance)
+                .findFirst()
+                .orElseThrow();
+        Span description = mediaLayout.getChildren()
+                .filter(Span.class::isInstance)
+                .map(Span.class::cast)
+                .findFirst()
+                .orElseThrow();
 
+        Assertions.assertTrue(mediaLayout.hasClassName("reference-preview-media-layout"));
         Assertions.assertInstanceOf(VideoPlayer.class, preview);
         Assertions.assertTrue(preview.getElement().getProperty("autoplay", false));
+        Assertions.assertTrue(description.hasClassName("reference-preview-description"));
+        Assertions.assertEquals("Video inspection notes", description.getText());
     }
 
     private static void setField(Object target, String fieldName, Object value) throws Exception {

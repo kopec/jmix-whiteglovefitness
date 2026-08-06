@@ -103,7 +103,12 @@ public class EquipmentFilePreviewView extends StandardView {
         Div imageWrapper = new Div(previewImageStage);
         imageWrapper.addClassName("reference-preview-image-wrapper");
         previewImageWrapper = imageWrapper;
-        previewContent.add(imageWrapper);
+
+        Div mediaLayout = createMediaLayout();
+        mediaLayout.add(imageWrapper);
+        addPreviewDescription(mediaLayout);
+
+        previewContent.add(mediaLayout);
         enableTouchZoom(imageWrapper);
         applyImageZoom();
     }
@@ -280,7 +285,12 @@ public class EquipmentFilePreviewView extends StandardView {
         videoPlayer.addClassName("reference-preview-video");
         videoPlayer.setAutoplay(true);
         videoPlayer.setFileRef(fileRef, fileStorageLocator);
-        previewContent.add(videoPlayer);
+
+        Div mediaLayout = createMediaLayout();
+        mediaLayout.add(videoPlayer);
+        addPreviewDescription(mediaLayout);
+
+        previewContent.add(mediaLayout);
     }
 
     private void renderDocumentPreview(FileRef fileRef) {
@@ -288,6 +298,23 @@ public class EquipmentFilePreviewView extends StandardView {
         pdfViewer.addClassName("reference-preview-document");
         pdfViewer.setSrc(FileRefResources.inlineResource(fileRef, fileStorageLocator));
         previewContent.add(pdfViewer);
+    }
+
+    private Div createMediaLayout() {
+        Div mediaLayout = new Div();
+        mediaLayout.addClassName("reference-preview-media-layout");
+        return mediaLayout;
+    }
+
+    private void addPreviewDescription(Div mediaLayout) {
+        String description = previewFile.getDescription();
+        if (description == null || description.isBlank()) {
+            return;
+        }
+
+        Span descriptionText = new Span(description);
+        descriptionText.addClassName("reference-preview-description");
+        mediaLayout.add(descriptionText);
     }
 
     private Button createToolbarButton(String messageKey, VaadinIcon icon,
